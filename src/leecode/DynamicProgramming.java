@@ -923,5 +923,90 @@ public class DynamicProgramming {
     /**
      * 题目：300 最长递增子序列
      */
+    public static int lengthOfLIS(int[] nums) {
+        if(nums == null || nums.length == 0){
+            return 0;
+        }
+        //创建dp数组 并初始化
+        int[] dp = new int[nums.length];
+        Arrays.fill(dp, 1);
+        int result = 1;
+
+        for(int i = 1; i < nums.length; i++){
+            for(int j = 0; j < i; j++){
+                if(nums[i] > nums[j]){
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+            if(dp[i] > result){
+                result = dp[i];
+            }
+        }
+
+        return result;
+
+    }
+
+    /**
+     * 题目：718 最长重复子数组
+     */
+    public static int findLength(int[] nums1, int[] nums2){
+        int result = 0;
+        //创建dp数组
+        //这里创建的时候 + 1 是为了简单 不需要初始化
+        int[][] dp = new int[nums1.length + 1][nums2.length + 1];
+
+        for(int i = 1; i <= nums1.length; i++){
+            for(int j = 1; j <= nums2.length; j++){
+                if(nums1[i - 1] == nums2[j - 1]){
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                }
+                if(dp[i][j] > result){
+                    result = dp[i][j];
+                }
+            }
+        }
+        return result;
+
+    }
+
+    //滚动数组
+    public static int findLength2(int[] nums1, int[] nums2){
+        int[] dp = new int[nums2.length + 1];
+        int res = 0;
+
+        for(int i = 1; i <= nums1.length; i++){
+            //从后向前进行遍历
+            for(int j = nums2.length; j > 0; j--){
+                if(nums1[i - 1] == nums2[j - 1]){
+                    dp[j] = dp[j - 1] + 1;
+                }else {
+                    dp[j] = 0;
+                }
+                res = Math.max(res, dp[j]);
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 题目：1143 最长公共子序列
+     */
+    public static int longestCommonSubsequence(String text1, String text2){
+        int[][] dp = new int[text1.length() + 1][text2.length() + 1];
+
+        for(int i = 1; i <= text1.length(); i++){
+            char t1 = text1.charAt(i - 1);
+            for(int j = 1; j <= text2.length(); j++){
+                char t2 = text2.charAt(j - 1);
+                if(t1 == t2){
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                }else {
+                    dp[i][j] = Math.max(dp[i][j - 1], dp[i - 1][j]);
+                }
+            }
+        }
+        return dp[text1.length()][text2.length()];
+    }
 
 }
