@@ -250,4 +250,49 @@ public class DoublePointer {
         }
         return pre;
     }
+
+    /**
+     * 题目：24 两两交换链表中的节点
+     */
+    public static ListNode swapPairs(ListNode head){
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode cur = dummy;
+
+        while(cur.next != null && cur.next.next != null){
+            ListNode temp = cur.next;
+            ListNode temp1 = cur.next.next.next;
+
+            cur.next = cur.next.next;
+            cur.next.next = temp;
+            cur.next.next.next = temp1;
+
+            cur = cur.next.next;
+        }
+
+        return dummy.next;
+
+    }
+
+    /**
+     * 题目：19 删除链表的倒数第N个节点
+     */
+    //创建快慢指针
+    public static ListNode removeNthFromEnd(ListNode head, int n){
+        //创建虚拟头节点
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode fast = dummy;
+        ListNode slow = dummy;
+        for(int i = 0; i < n; i++){
+            fast = fast.next;
+        }
+        while(fast.next != null){
+            fast = fast.next;
+            slow = slow.next;
+        }
+        //慢指针在删除节点的前面
+        slow.next = slow.next.next;
+        return dummy.next;
+    }
 }

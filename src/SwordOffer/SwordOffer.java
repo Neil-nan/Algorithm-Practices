@@ -917,6 +917,41 @@ public class SwordOffer {
         return rightIndex == end && left && right;
     }
 
+    /**
+     * 题目：剑指offer 34 二叉树中和为某一值的路径
+     */
+    //回溯
+    static List<List<Integer>> result = new ArrayList<>();
+    public static List<List<Integer>> pathSum(TreeNode root, int target){
+        List<Integer> list = new ArrayList<>();
+        if(root == null){
+            return result;
+        }
+        backtracking(root, target, list, root.val);
+        return result;
+    }
+
+    public static void backtracking(TreeNode node, int target, List<Integer> list, int sum){
+        //终止条件
+        list.add(node.val);
+        //遇到叶子节点
+        if(node.right == null && node.left == null){
+            if(sum == target){
+                result.add(new ArrayList<>(list));
+            }
+            return;
+        }
+
+        if(node.left != null){
+            backtracking(node.left, target, list, sum + node.left.val);//回溯
+            list.remove(list.size() - 1);
+        }
+        if(node.right != null){
+            backtracking(node.right, target, list, sum + node.right.val);
+            list.remove(list.size() - 1);
+        }
+    }
+
 
 
 
