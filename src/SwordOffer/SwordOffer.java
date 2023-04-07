@@ -952,6 +952,78 @@ public class SwordOffer {
         }
     }
 
+    /**
+     * 题目：剑指offer 35 复杂链表的复制
+     */
+    //看答案
+    public static Node copyRandomList(Node head){
+        if(head == null){
+            return null;
+        }
+        Node p = head;
+        //第一步 在每个原节点后面创建一个新节点
+        //1->1'->2->2'->3->3'
+        while(p != null){
+            Node newNode = new Node(p.val);
+            newNode.next = p.next;
+            p.next = newNode;
+            p = newNode.next;
+        }
+
+        p = head;
+        //第二步 设置新节点的随机节点
+        while(p != null){
+            if(p.random != null){
+                p.next.random = p.random.next;
+            }
+            p = p.next.next;
+        }
+        Node dummy = new Node(-1);
+        p = head;
+        Node cur = dummy;
+        //第三步 将两个链表分离
+        while(p != null){
+            cur.next = p.next;
+            cur = cur.next;
+            p.next = cur.next;
+            p = p.next;
+        }
+        return dummy.next;
+    }
+
+    /**
+     * 题目：剑指offer 36 二叉搜索树与双向链表
+     */
+    //递归
+    static Node pre;
+    static Node head;
+    public static Node treeToDoublyList(Node root){
+        if(root == null){
+            return null;
+        }
+        treeToList(root);
+        head.left = pre;
+        pre.right = head;
+        return head;
+    }
+
+    //中序遍历
+    public static void treeToList(Node node){
+        //终止条件
+        if(node == null){
+            return;
+        }
+        treeToList(node.left);
+        if(pre != null){
+            pre.right = node;
+        }else {
+            head = node;
+        }
+        node.left = pre;
+        pre = node;
+        treeToList(node.right);
+    }
+
 
 
 
@@ -975,6 +1047,29 @@ class TreeNode{
 
     public TreeNode(int val) {
         this.val = val;
+    }
+}
+
+class Node{
+    int val;
+    Node next;
+    Node random;
+    Node left;
+    Node right;
+
+    public Node() {
+    }
+
+    public Node(int val) {
+        this.val = val;
+        this.next = null;
+        this.random = null;
+    }
+
+    public Node(int val, Node left, Node right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
     }
 }
 

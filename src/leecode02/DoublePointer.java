@@ -295,4 +295,73 @@ public class DoublePointer {
         slow.next = slow.next.next;
         return dummy.next;
     }
+
+    /**
+     * 题目：面试题 02.07 链表相交
+     */
+    public static ListNode getIntersectionNode(ListNode headA, ListNode headB){
+        //先计算两个链表的长度
+        int lenA = 0;
+        int lenB = 0;
+        //创建指针
+        ListNode curA = headA;
+        ListNode curB = headB;
+        while(curA != null){
+            lenA++;
+            curA = curA.next;
+        }
+        while(curB != null){
+            lenB++;
+            curB = curB.next;
+        }
+        //默认是A短 B长 如果不是就进行转换
+        if(lenB > lenA){
+            ListNode tempNode = headA;
+            headA = headB;
+            headB = tempNode;
+            int lenTemp = lenA;
+            lenA = lenB;
+            lenB = lenTemp;
+        }
+        //让B先走
+        curA = headA;
+        curB = headB;
+        //int len = lenB - lenA;
+        for(int i = 0; i < lenA - lenB; i++){
+            curA = curA.next;
+        }
+        //一起走
+        while(curA != null && curB != null){
+            if(curA == curB){
+                return curA;
+            }
+            curA = curA.next;
+            curB = curB.next;
+        }
+        return null;
+    }
+
+    /**
+     * 题目：142 环形链表II
+     */
+    public static ListNode detectCycle(ListNode head){
+        //创建快慢指针
+        ListNode fast = head;
+        ListNode slow = head;
+        while(fast != null && fast.next != null){
+            fast = fast.next.next;
+            slow = slow.next;
+            if(fast == slow){//有推导公式
+                ListNode index = head;
+                while(index != slow){
+                    index = index.next;
+                    slow = slow.next;
+                }
+                return index;
+            }
+        }
+        return null;
+    }
+
+
 }

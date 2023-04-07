@@ -1009,4 +1009,133 @@ public class DynamicProgramming {
         return dp[text1.length()][text2.length()];
     }
 
+    /**
+     * 题目：1035 不相交的线
+     */
+    //求最长公共子序列
+    public static int maxUncrossedLines(int[] nums1, int[] nums2){
+        int[][] dp = new int[nums1.length + 1][nums2.length + 1];
+
+        //前i - 1
+        for(int i = 1; i <= nums1.length; i++){
+            int t1 = nums1[i - 1];
+            for(int j = 1; j <= nums2.length; j++){
+                int t2 = nums2[j - 1];
+                if(t1 == t2){
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                }else {
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+        return dp[nums1.length][nums2.length];
+    }
+
+    /**
+     * 题目：53 最大子序和
+     */
+    //使用贪心
+    public static int maxSubArray(int[] nums){
+        if(nums.length == 1){
+            return nums[0];
+        }
+        int res = Integer.MIN_VALUE;
+        int count = 0;
+        for(int i = 0; i < nums.length; i++){
+            count += nums[i];
+            if(res < count){
+                res = count;
+            }
+            if(count <= 0){
+                count = 0;
+            }
+        }
+        return res;
+    }
+
+    //使用动态规划
+    public static int maxSumArray2(int[] nums){
+        if(nums.length == 0){
+            return 0;
+        }
+        int res = nums[0];
+        int[] dp = new int[nums.length];
+        dp[0] = nums[0];
+        for(int i = 1; i < nums.length; i++){
+            dp[i] = Math.max(dp[i - 1] + nums[i], nums[i]);
+            if(res < dp[i]){
+                res = dp[i];
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 题目：392 判断子序列
+     */
+    //使用双指针法
+    public static boolean isSubsequence(String s, String t){
+        if(t.length() < s.length()){
+            return false;
+        }
+        int indexT = 0;
+        int indexS = 0;
+        while(indexS < s.length() && indexT < t.length()){
+            if(s.charAt(indexS) == t.charAt(indexT)){
+                indexS++;
+            }
+            indexT++;
+        }
+        return indexS == s.length();
+
+    }
+
+    //使用动态规划
+    public static boolean isSubsequence2(String s, String t){
+        int sLen = s.length();
+        int tLen = t.length();
+        int[][] dp = new int[sLen + 1][tLen + 1];
+        //初始化
+
+        for(int i = 1; i <= sLen; i++){
+            for(int j = 1; j <= tLen; j++){
+                if(s.charAt(i - 1) == t.charAt(j - 1)){
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                }else {
+                    dp[i][j] = dp[i][j - 1];
+                }
+            }
+        }
+        if(dp[sLen][tLen] == sLen){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    /**
+     * 题目：115 不同的子序列
+     */
+    public static int numDistinct(String s, String t){
+        int sLen = s.length();
+        int tLen = t.length();
+        int[][] dp = new int[sLen + 1][tLen + 1];
+        //初始化
+        for(int i = 0; i <= sLen; i++){
+            dp[i][0] = 1;
+        }
+
+        for(int i = 1; i <= sLen; i++){
+            char sChar = s.charAt(i - 1);
+            for(int j = 1; j <= tLen; j++){
+                char tChar = t.charAt(j - 1);
+                if(sChar == tChar){
+                    dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];
+                }else {
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+        return dp[sLen][tLen];
+    }
 }
