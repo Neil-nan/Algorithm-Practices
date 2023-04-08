@@ -1024,6 +1024,51 @@ public class SwordOffer {
         treeToList(node.right);
     }
 
+    /**
+     * 题目：剑指offer 38 字符串的排列
+     */
+    static List<String> res;
+    public static String[] permutation(String s){
+        res = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        int len = s.length();
+        int[] used = new int[len];
+        char[] chars = s.toCharArray();
+        Arrays.sort(chars);
+        backtracking1(chars, sb, used);
+        int lenRes = res.size();
+        String[] result = new String[lenRes];
+        for(int i = 0; i < lenRes; i++){
+            result[i] = res.get(i);
+        }
+        return result;
+    }
+
+    //纵向去重 横向也要去重
+    public static void backtracking1(char[] chars, StringBuilder sb, int[] used){
+        //终止条件
+        if(sb.length() == chars.length){
+            res.add(new String(sb));
+        }
+
+        for(int i = 0; i < chars.length; i++){
+            if(used[i] == 1){//纵向递归的时候已经被使用过
+                continue;
+            }
+            //横向去重
+            if(i > 0 && chars[i] == chars[i - 1] && used[i - 1] == 0){
+                continue;
+            }
+            sb.append(chars[i]);
+            used[i] = 1;
+            //回溯
+            backtracking1(chars, sb, used);
+            used[i] = 0;
+            sb.deleteCharAt(sb.length() - 1);
+        }
+    }
+
+
 
 
 
@@ -1159,5 +1204,50 @@ class MinStack{
 
     public int min() {
         return (int)min;
+    }
+}
+
+/**
+ * 题目：剑指offer 37 二叉树的序列化与反序列化
+ */
+class Codec{
+
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        return rserialize(root, "");
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        String[] dataArray = data.split(",");
+        List<String> dataList = new LinkedList<String>(Arrays.asList(dataArray));
+        return rdeserialize(dataList);
+    }
+
+    public String rserialize(TreeNode root, String str){
+        //终止条件
+        if(root == null){
+            str += "None,";
+        }else {
+            //前序遍历
+            str += str.valueOf(root.val) + ",";
+            str = rserialize(root.left, str);
+            str = rserialize(root.right, str);
+        }
+        return str;
+    }
+
+    public TreeNode rdeserialize(List<String> dataList) {
+        if (dataList.get(0).equals("None")) {
+            dataList.remove(0);
+            return null;
+        }
+
+        TreeNode root = new TreeNode(Integer.valueOf(dataList.get(0)));
+        dataList.remove(0);
+        root.left = rdeserialize(dataList);
+        root.right = rdeserialize(dataList);
+
+        return root;
     }
 }

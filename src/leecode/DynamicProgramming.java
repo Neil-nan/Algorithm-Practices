@@ -1138,4 +1138,181 @@ public class DynamicProgramming {
         }
         return dp[sLen][tLen];
     }
+
+    /**
+     * 题目：583 两个字符串的删除操作
+     */
+    //求最长子序列？模仿1143
+    public static int minDistance(String word1, String word2){
+        int len1 = word1.length();
+        int len2 = word2.length();
+        int[][] dp = new int[len1 + 1][len2 + 1];
+
+        for(int i = 1; i <= len1; i++){
+            char char1 = word1.charAt(i - 1);
+            for(int j = 1; j <= len2; j++){
+                char char2 = word2.charAt(j - 1);
+                if(char1 == char2){
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                }else {
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+        return len1 + len2 - dp[len1][len2] * 2;
+    }
+
+    //模仿115
+    public static int minDistance2(String word1, String word2){
+        int len1 = word1.length();
+        int len2 = word2.length();
+        //初始化
+        //dp[i][j]：以i-1为结尾的字符串word1，和以j-1位结尾的字符串word2，
+        //想要达到相等，所需要删除元素的最少次数
+        int[][] dp = new int[len1 + 1][len2 + 1];
+        for(int i = 0; i <= len1; i++){
+            dp[i][0] = i;
+        }
+        for(int j = 0; j <= len2; j++){
+            dp[0][j] = j;
+        }
+
+        for(int i = 1; i <= len1; i++){
+            char char1 = word1.charAt(i - 1);
+            for(int j = 1; j <= len2; j++){
+                char char2 = word2.charAt(j - 1);
+                if(char1 == char2){
+                    dp[i][j] = dp[i - 1][j - 1];
+                }else {
+                    dp[i][j] = Math.min(dp[i - 1][j - 1] + 2, Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1));
+                }
+            }
+        }
+
+        return dp[len1][len2];
+    }
+
+    /**
+     * 题目：72 编辑距离
+     */
+    public static int minDistance3(String word1, String word2){
+        int len1 = word1.length();
+        int len2 = word2.length();
+        //初始化
+        //dp[i][j] 表示以下标i-1为结尾的字符串word1，和以下标j-1为结尾的字符串word2，最近编辑距离为dp[i][j]。
+        int[][] dp = new int[len1 + 1][len2 + 1];
+        for(int i = 0; i <= len1; i++){
+            dp[i][0] = i;
+        }
+        for(int j = 0; j <= len2; j++){
+            dp[0][j] = j;
+        }
+
+        for(int i = 1; i <= len1; i++){
+            char char1 = word1.charAt(i - 1);
+            for(int j = 1; j <= len2; j++){
+                char char2 = word2.charAt(j - 1);
+                if(char1 == char2){
+                    dp[i][j] = dp[i - 1][j - 1];
+                }else {//word1变成word2  增删改
+                    dp[i][j] = Math.min(dp[i - 1][j] + 1, Math.min(dp[i][j - 1] + 1, dp[i - 1][j - 1] + 1));
+                }
+            }
+        }
+        return dp[len1][len2];
+    }
+
+    /**
+     * 题目：647 回文子串
+     */
+    //从下到上 从左向右进行遍历
+    public static int countSubstrings(String s){
+        int len = s.length();
+        int result = 0;
+        //初始化
+        //dp[i][j]：s字符串下标i到下标j的字串是否是一个回文串，即s[i, j]
+        boolean[][] dp = new boolean[len][len];
+
+        //从左向右 从下到上进行遍历
+        //情况一：下标i 与 j相同，同一个字符例如a，当然是回文子串
+        //情况二：下标i 与 j相差为1，例如aa，也是回文子串
+        //情况三：下标：i 与 j相差大于1的时候，例如cabac，此时s[i]与s[j]已经相同了，
+        // 我们看i到j区间是不是回文子串就看aba是不是回文就可以了，那么aba的区间就是 i+1 与 j-1区间，这个区间是不是回文就看dp[i + 1][j - 1]是否为true。
+        for(int i = len - 1; i >= 0; i--){
+            //注意看定义，所以只有右上角的一半是值得讨论的，及i<j
+            for(int j = i; j < len; j++){
+                if(s.charAt(i) == s.charAt(j)){
+                    if(j - i < 3){
+                        dp[i][j] = true;
+                    }else {
+                        dp[i][j] = dp[i + 1][j - 1];
+                    }
+                }else {
+                    dp[i][j] = false;
+                }
+            }
+        }
+
+        for(int i = 0; i < len; i++){
+            for(int j = 0; j < len; j++){
+                if(dp[i][j]){
+                    result++;
+                }
+            }
+        }
+        return result;
+    }
+
+    //双指针法
+    public static int countSubstrings2(String s){
+        int len = s.length();
+        int res = 0;
+        for(int i = 0; i < len; i++){
+            res += extend(s, i, i, len);//以i为中心
+            res += extend(s, i, i + 1, len);//以i和i+1为中心
+        }
+        return res;
+    }
+
+    public static int extend(String s, int i, int j, int len){
+        int result = 0;
+        while(i >= 0 && j < len && s.charAt(i) == s.charAt(j)){
+            i--;
+            j++;
+            result++;
+        }
+        return result;
+    }
+
+    /**
+     * 题目：516 最长回文子序列
+     */
+    public static int longestPalindromeSubseq(String s){
+        int len = s.length();
+        int[][] dp = new int[len][len];
+        //初始化 对角线是1
+        for(int i = 0; i < len; i++){
+            dp[i][i] = 1;
+        }
+
+        //从下到上 从左向右进行遍历
+        for(int i = len - 1; i >= 0; i--){
+            char char1 = s.charAt(i);
+            for(int j = i + 1; j < len; j++){
+                char char2 = s.charAt(j);
+                if(char1 == char2){
+                    dp[i][j] = dp[i + 1][j - 1] + 2;
+                }else {
+                    //只能选一个
+                    dp[i][j] = Math.max(dp[i][j - 1], dp[i + 1][j]);
+                }
+            }
+        }
+        return dp[0][len - 1];
+    }
+
+    /**
+     * 题目：7 最长回文子串
+     */
+
 }

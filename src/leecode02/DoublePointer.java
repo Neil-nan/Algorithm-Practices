@@ -1,5 +1,9 @@
 package leecode02;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class DoublePointer {
 
     /**
@@ -361,6 +365,110 @@ public class DoublePointer {
             }
         }
         return null;
+    }
+
+    /**
+     * 题目：15 三数之和
+     */
+    public static List<List<Integer>> threeSum(int[] nums){
+        //先排列
+        Arrays.sort(nums);
+        List<List<Integer>> result = new ArrayList<>();
+        int len = nums.length;
+        if(nums[len - 1] < 0){
+            return result;
+        }
+
+        for(int i = 0; i < len; i++){
+            if(nums[i] > 0){//那和不可能为0
+                return result;
+            }
+            if(i > 0 && nums[i] == nums[i - 1]){
+                continue;
+            }
+
+            //创建左右指针
+            int left = i + 1;
+            int right = len - 1;
+            while(left < right){//左右指针对应的两个数位置不能相同
+                int sum = nums[left] + nums[right];
+                if(sum + nums[i] < 0){//左指针右移
+                    left++;
+                }else if(sum + nums[i] > 0){//右指针左移
+                    right--;
+                }else {//找到结果
+                    List<Integer> list = new ArrayList<>();
+                    list.add(nums[i]);
+                    list.add(nums[left]);
+                    list.add(nums[right]);
+                    result.add(new ArrayList<>(list));
+                    //不重复 所以要进行去重
+                    while(left < right && nums[left] == nums[left + 1]){
+                        left++;
+                    }
+                    while(left < right && nums[right] == nums[right - 1]){
+                        right--;
+                    }
+                    left++;
+                    right--;
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 题目：18 四数之和
+     */
+    public static List<List<Integer>> fourSum(int[] nums, int target){
+        List<List<Integer>> res = new ArrayList<>();
+        Arrays.sort(nums);
+        int len = nums.length;
+
+        for(int i = 0; i < len; i++){
+            //去重结果可能是负
+//            if(nums[i] > target){
+//                return res;
+//            }
+            if(i > 0 && nums[i] == nums[i - 1]){
+                continue;
+            }
+            for(int j = i + 1; j < len; j++){
+                //去重
+                if(j > i + 1 && nums[j] == nums[j - 1]){
+                    continue;
+                }
+                //创建双指针
+                int left = j + 1;
+                int right = len - 1;
+                while(left < right){
+                    //改成long
+                    long sum = (long)nums[i] + nums[j] + nums[left] + nums[right];
+                    if(sum > target){
+                        right--;
+                    }else if(sum < target){
+                        left++;
+                    }else {
+                        List<Integer> list = new ArrayList<>();
+                        list.add(nums[i]);
+                        list.add(nums[j]);
+                        list.add(nums[left]);
+                        list.add(nums[right]);
+                        res.add(new ArrayList<>(list));
+                        //去重
+                        while(left < right && nums[left] == nums[left + 1]){
+                            left++;
+                        }
+                        while(left < right && nums[right] == nums[right - 1]){
+                            right--;
+                        }
+                        left++;
+                        right--;
+                    }
+                }
+            }
+        }
+        return res;
     }
 
 
