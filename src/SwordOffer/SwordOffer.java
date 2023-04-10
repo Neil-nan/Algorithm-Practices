@@ -1068,7 +1068,82 @@ public class SwordOffer {
         }
     }
 
+    /**
+     * 题目：剑指offer 39 数组中出现次数超过一半的数字
+     */
+    public static int majorityElement(int[] nums){
+        //直接排序
+        Arrays.sort(nums);
+        int len = nums.length;
+        int index = len / 2;
+        return nums[index];
 
+    }
+
+    //使用投票算法
+    public static int majorityElement2(int[] nums){
+        //众数candidate  出现次数count
+        int count = 0;
+        Integer candidate = null;
+
+        for (int num : nums) {
+            if(count == 0){
+                candidate = num;
+            }
+            count += (num == candidate) ? 1 : -1;
+        }
+        return candidate;
+    }
+
+    /**
+     * 题目：剑指offer 40 最小的k个数
+     */
+    public static int[] getLeastNumbers(int[] arr, int k){
+        if(k == 0){
+            return new int[]{};
+        }
+        int[] res = new int[k];
+        Arrays.sort(arr);
+        for(int i = 0; i < k; i++){
+            res[i] = arr[i];
+        }
+        return res;
+    }
+
+    //使用快排
+    public static int[] getLeastNumbers2(int[] arr, int k){
+        quickSort(arr, 0, arr.length - 1);
+        return Arrays.copyOf(arr, k);
+    }
+
+    public static void quickSort(int[] arr, int l, int r){
+        //终止条件  子数组长度为1
+        if(l >= r){
+            return;
+        }
+        //哨兵划分操作 以arr[l]作为基准数
+        int i = l;
+        int j = r;
+        while(i < j){
+            while(i < j && arr[j] >= arr[l]){
+                j--;
+            }
+            while(i < j && arr[i] <= arr[l]){
+                i++;
+            }
+            swap(arr, i, j);
+        }
+        swap(arr, i, l);
+        //递归左右子数组执行哨兵划分
+        quickSort(arr, l, i - 1);
+        quickSort(arr, i + 1, r);
+    }
+
+    public static void swap(int[] arr, int i, int j){
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
 
 
 

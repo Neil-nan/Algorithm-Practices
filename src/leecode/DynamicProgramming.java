@@ -1312,7 +1312,43 @@ public class DynamicProgramming {
     }
 
     /**
-     * 题目：7 最长回文子串
+     * 题目：5 最长回文子串
      */
+    //参考647
+    public static String longestPalindrome(String s){
+        int len = s.length();
+        String res = s.substring(0, 1);
+
+        //初始化
+        //dp[i][j] = dp[i + 1][j - 1] 从下到上 从左向右进行遍历 i <= j
+        boolean[][] dp = new boolean[len][len];
+        for(int i = len - 1; i >= 0; i--){
+            for(int j = i; j < len; j++){
+                if(s.charAt(i) == s.charAt(j)){
+                    if(j - i < 3){
+                        dp[i][j] = true;
+                    }else {
+                        dp[i][j] = dp[i + 1][j - 1];
+                    }
+                }else {
+                    dp[i][j] = false;
+                }
+            }
+        }
+
+        //找答案
+        for(int i = 0; i < len; i++){
+            for(int j = i; j < len; j++){
+                if(dp[i][j]){
+                    String temp = s.substring(i, j + 1);
+                    if(temp.length() > res.length()){
+                        res = temp;
+                    }
+                }
+            }
+        }
+        return res;
+
+    }
 
 }
