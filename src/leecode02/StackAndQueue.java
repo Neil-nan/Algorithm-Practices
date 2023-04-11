@@ -6,6 +6,101 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class StackAndQueue {
+
+    /**
+     * 题目：20 有效的括号
+     */
+    public static boolean isValid(String s){
+        if(s.length() % 2 == 1){
+            return false;
+        }
+        Deque<Character> stack = new ArrayDeque<>();
+        for(int i = 0; i < s.length(); i++){
+            char c = s.charAt(i);
+            if(c == '('){
+                stack.push(')');
+            }
+            if(c == '['){
+                stack.push(']');
+            }
+            if(c == '{'){
+                stack.push('}');
+            }
+            if(c == ')' || c == ']' || c == '}'){
+                if(!stack.isEmpty()){
+                    char c1 = stack.peek();
+                    if(c1 == c){
+                        stack.pop();
+                    }else {
+                        return false;
+                    }
+                }else {
+                    return false;
+                }
+            }
+        }
+        return stack.isEmpty();
+    }
+
+    /**
+     * 题目：1047 删除字符串中的所有相邻重复项
+     */
+    //使用栈
+    public static String removeDuplicates(String s){
+        Deque<Character> stack = new ArrayDeque<>();
+        for(int i = 0; i < s.length(); i++){
+            char ch = s.charAt(i);
+            if(stack.isEmpty() || stack.peek() != ch){
+                stack.push(ch);
+            }else {
+                stack.pop();
+            }
+        }
+        String str = "";
+        while(!stack.isEmpty()){
+            str = stack.pop() + str;
+        }
+
+        return str;
+    }
+
+    //用字符串直接作为栈
+    public static String removeDuplicates2(String s){
+        //将res做栈
+        StringBuilder res = new StringBuilder();
+        //top作为res的长度
+        int top = -1;
+        for(int i = 0; i < s.length(); i++){
+            char ch = s.charAt(i);
+            if(top >= 0 && res.charAt(top) == ch){
+                res.deleteCharAt(top);
+                top--;
+            }else {
+                res.append(ch);
+                top++;
+            }
+        }
+        return res.toString();
+    }
+
+    //双指针
+    public static String removeDuplicates3(String s){
+        char[] chars = s.toCharArray();
+        int fastIndex = 0;
+        int slowIndex = 0;
+        while(fastIndex < s.length()){
+            chars[slowIndex] = chars[fastIndex];
+            if(slowIndex > 0 && chars[slowIndex] == chars[slowIndex - 1]){
+                slowIndex--;
+            }else {
+                slowIndex++;
+            }
+            fastIndex++;
+        }
+
+        return new String(chars, 0, slowIndex);
+    }
+
 }
 
 /**

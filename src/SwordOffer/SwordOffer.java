@@ -1145,6 +1145,46 @@ public class SwordOffer {
         arr[j] = temp;
     }
 
+    /**
+     * 题目：剑指offer 42 连续子数组的最大和
+     */
+    //贪心
+    public static int maxSubArray(int[] nums){
+        int res = Integer.MIN_VALUE;
+        int count = 0;
+        for(int i = 0; i < nums.length; i++){
+            count += nums[i];
+            if(count > res){
+                res = count;
+            }
+            if(count <= 0){
+                count = 0;
+            }
+        }
+        return res;
+
+    }
+
+    //动态规划
+    public static int maxSubArray2(int[] nums){
+        if(nums == null || nums.length == 0){
+            return 0;
+        }
+        //创建dp数组 初始化
+        int[] dp = new int[nums.length];
+        dp[0] = nums[0];
+        int res = dp[0];
+        for(int i = 1; i < nums.length; i++){
+            dp[i] = Math.max(dp[i - 1] + nums[i], nums[i]);
+            if(dp[i] > res){
+                res = dp[i];
+            }
+        }
+        return res;
+    }
+
+
+
 
 
 
@@ -1324,5 +1364,43 @@ class Codec{
         root.right = rdeserialize(dataList);
 
         return root;
+    }
+}
+
+/**
+ * 题目：剑指offer 41 数据流中的中位数
+ */
+class MedianFinder {
+
+    //两个优先队列 queMax 和 queMin
+    // 分别记录大于中位数的数和小于等于中位数的数
+    PriorityQueue<Integer> queMin;
+    PriorityQueue<Integer> queMax;
+
+    /** initialize your data structure here. */
+    public MedianFinder() {
+        queMin = new PriorityQueue<>((a, b) -> (b - a));//从大到小
+        queMax = new PriorityQueue<>((a, b) -> (a - b));//从小到大
+    }
+
+    public void addNum(int num) {
+        if(queMin.isEmpty() || num <= queMin.peek()){
+            queMin.offer(num);
+            if(queMax.size() + 1 < queMin.size()){
+                queMax.offer(queMin.poll());
+            }
+        }else {
+            queMax.offer(num);
+            if(queMax.size() > queMin.size()){
+                queMin.offer(queMax.poll());
+            }
+        }
+    }
+
+    public double findMedian() {
+        if (queMin.size() > queMax.size()) {
+            return queMin.peek();
+        }
+        return (queMin.peek() + queMax.peek()) / 2.0;
     }
 }
