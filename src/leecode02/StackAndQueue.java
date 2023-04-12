@@ -101,6 +101,39 @@ public class StackAndQueue {
         return new String(chars, 0, slowIndex);
     }
 
+    /**
+     * 题目：150 逆波兰表达式求值
+     */
+    public static int evalRPN(String[] tokens){
+        //使用栈
+        Deque<Integer> stack = new ArrayDeque<>();
+        for(int i = 0; i < tokens.length; i++){
+            String s = tokens[i];
+            if(s.equals("+")){
+                int a = stack.pop();
+                int b = stack.pop();
+                stack.push(a + b);
+            }else if(s.equals("-")){
+                int a = stack.pop();
+                int b = stack.pop();
+                stack.push(b - a);
+            }else if(s.equals("*")){
+                int a = stack.pop();
+                int b = stack.pop();
+                stack.push(a * b);
+            }else if(s.equals("/")){
+                int a = stack.pop();
+                int b = stack.pop();
+                stack.push(b / a);
+            }else {
+                stack.push(Integer.valueOf(s));//注意
+            }
+        }
+        return stack.pop();
+
+    }
+
+
 }
 
 /**
