@@ -1183,6 +1183,68 @@ public class SwordOffer {
         return res;
     }
 
+    /**
+     * 题目：剑指offer 43 1~n 整数中1出现的次数
+     */
+    //https://leetcode.cn/problems/number-of-digit-one/solutions/1748815/by-baoya_uncle-2hnj/
+    // https://leetcode-cn.com/problems/1nzheng-shu-zhong-1chu-xian-de-ci-shu-lcof/solution/mian-shi-ti-43-1n-zheng-shu-zhong-1-chu-xian-de-2/
+    // 2304
+    public static int countDigitOne(int n){
+        int digit = 1;
+        int res = 0;
+        int high = n / 10;
+        int cur = n % 10;
+        int low = 0;
+        while(high != 0 || cur != 0){
+            if(cur == 0){
+                res += high * digit;
+            }else if(cur == 1){
+                res += high * digit + low + 1;
+            }else {
+                res += (high + 1) * digit;
+            }
+            low += cur * digit;
+            cur = high % 10;
+            high /= 10;
+            digit *= 10;
+        }
+        return res;
+    }
+
+    /**
+     * 题目：剑指offer 44 数字序列中某一位的数字
+     */
+    //https://leetcode.cn/problems/shu-zi-xu-lie-zhong-mou-yi-wei-de-shu-zi-lcof/solutions/219252/mian-shi-ti-44-shu-zi-xu-lie-zhong-mou-yi-wei-de-6/
+    public int findNthDigit(int n){
+        int digit = 1;
+        long start = 1;
+        long count = 9;
+        while (n > count) { // 1.
+            n -= count;
+            digit += 1;
+            start *= 10;
+            count = digit * start * 9;
+        }
+        long num = start + (n - 1) / digit; // 2.
+        return Long.toString(num).charAt((n - 1) % digit) - '0'; // 3.
+    }
+
+    /**
+     * 题目：剑指offer 46 把数字翻译成字符串
+     */
+    //回溯
+    static int resNum;
+    public static int translateNum(int num){
+
+    }
+
+    public static void backtracking(String numString, int index){
+        //终止条件
+        if(index == numString.length()){
+            
+        }
+    }
+
 
 
 

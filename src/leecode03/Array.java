@@ -60,6 +60,7 @@ public class Array {
     /**
      * 题目：53 最大子数组和
      */
+    //返回数组的解法 https://leetcode-cn.com/problems/maximum-subarray/solution/zheng-li-yi-xia-kan-de-dong-de-da-an-by-lizhiqiang/
     //贪心算法
     public static int maxSubArray(int[] nums){
         int res = Integer.MIN_VALUE;
@@ -195,5 +196,86 @@ public class Array {
             }
         }
         return -1;
+    }
+
+    /**
+     * 题目：121 买卖股票的最佳时机
+     */
+    //所有股票问题的想法  https://leetcode.cn/circle/article/qiAgHn/
+    public static int maxProfit(int[] prices){
+        //左边的最小值和右边的最大值
+        int left = Integer.MAX_VALUE;
+        int result = 0;
+        for(int i = 0; i < prices.length; i++){
+            left = Math.min(left, prices[i]);
+            result = Math.max(result, prices[i] - left);
+        }
+        return result;
+    }
+
+    /**
+     * 题目：88 合并两个有序数组
+     */
+    public static void merge(int[] nums1, int m, int[] nums2, int n) {
+        //nums1 有两个指针 一个指向nums2存放的位置  一个指向自己 nums2有一个指针指向自己
+        //特殊情况进行判断
+        if(n == 0){
+            return;
+        }
+        // if(m == 0){
+        //     nums1 = nums2;
+        //     return;
+        // }
+        int index1 = m - 1;
+        int index = nums1.length - 1;
+        int index2 = n - 1;
+        while(index >= 0){
+            while(index1 >= 0 && index2 >= 0){
+                int num1 = nums1[index1];
+                int num2 = nums2[index2];
+                if(num1 <= num2){
+                    nums1[index] = num2;
+                    index2--;
+                }else {
+                    nums1[index] = num1;
+                    index1--;
+                }
+                index--;
+            }
+            while(index1 >= 0){
+                nums1[index] = nums1[index1];
+                index1--;
+                index--;
+            }
+            while(index2 >= 0){
+                nums1[index] = nums2[index2];
+                index2--;
+                index--;
+            }
+        }
+    }
+
+    //从后向前 双指针
+    //在此遍历过程中的任意一个时刻，nums1 数组中有 m−p1−1个元素被放入 nums1的后半部，
+    // nums2数组中有 n−p2−1 个元素被放入 nums1 的后半部，
+    // 而在指针 p1的后面，nums1 数组有 m+n−p1−1 个位置。
+    // m + n - p1 - 1 >= m - p1 - 1 + n - p2 - 1
+    public static void merge2(int[] nums1, int m, int[] nums2, int n){
+        int p1 = m - 1;
+        int p2 = n - 1;
+        int tail = m + n - 1;
+        int cur;
+        while(p1 >= 0 || p2 >= 0){
+            if(p1 == -1){
+                cur = nums2[p2--];
+            }else if(p2 == -1){
+                cur = nums1[p1--];
+            }else if(nums1[p1] > nums2[p2]){
+                cur = nums1[p1--];
+            }else {
+                cur = nums2[p2--];
+            }
+            nums1[tail--] = cur;
+        }
     }
 }
