@@ -278,4 +278,121 @@ public class Array {
             nums1[tail--] = cur;
         }
     }
+
+    /**
+     * 题目：54 螺旋矩阵
+     */
+    public static List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> res = new ArrayList<>();
+        //判断
+        if(matrix == null || matrix.length == 0 || matrix[0].length == 0){
+            return res;
+        }
+        //创建上下左右边界
+        int wide = matrix.length;
+        int len = matrix[0].length;
+        int top = 0;
+        int bottom = wide - 1;
+        int left = 0;
+        int right = len - 1;
+        int index = 0;
+        int num = wide * len;
+        while(index < num){
+            for(int i = left; i <= right && index < num; i++){
+                res.add(matrix[top][i]);
+                index++;
+            }
+            top++;
+            for(int i = top; i <= bottom && index < num; i++){
+                res.add(matrix[i][right]);
+                index++;
+            }
+            right--;
+            for(int i = right; i >= left && index < num; i--){
+                res.add(matrix[bottom][i]);
+                index++;
+            }
+            bottom--;
+            for(int i = bottom; i >= top && index < num; i--){
+                res.add(matrix[i][left]);
+                index++;
+            }
+            left++;
+        }
+        return res;
+
+    }
+
+    /**
+     * 题目：42 接雨水
+     */
+    //单调栈
+    public static int trap(int[] height){
+        //单调栈 栈底大 栈顶小
+        int len = height.length;
+        if(len <= 2){
+            return 0;
+        }
+        Deque<Integer> stack = new ArrayDeque<>();
+        stack.push(0);
+        int sum = 0;
+
+        for(int i = 1; i < len; i++){
+            if(height[i] < height[stack.peek()]){
+                stack.push(i);
+            }else if(height[i] == height[stack.peek()]){
+                stack.pop();
+                stack.push(i);
+            }else{
+                //弹出计算
+                int heightAtIdx = height[i];
+                while(!stack.isEmpty() && heightAtIdx > height[stack.peek()]){
+                    int mid = stack.pop();
+                    if(!stack.isEmpty()){
+                        int left = stack.peek();
+                        int h = Math.min(height[left], height[i]) - height[mid];
+                        int w = i - left - 1;
+                        int hold = h * w;
+                        if(hold > 0){
+                            sum += hold;
+                        }
+                    }
+                }
+                stack.push(i);
+            }
+        }
+        return sum;
+
+    }
+
+    //使用双指针
+    public static int trap2(int[] height){
+        //记录此位置的最左边和左右边的最大值
+        int len = height.length;
+        if(len <= 2){
+            return 0;
+        }
+        int[] maxLeft = new int[len];
+        int[] maxRight = new int[len];
+
+        maxLeft[0] = height[0];
+        for(int i = 1; i < len; i++){
+            maxLeft[i] = Math.max(maxLeft[i - 1], height[i]);
+        }
+
+        maxRight[len - 1] = height[len - 1];
+        for(int i = len - 2; i >= 0; i--){
+            maxRight[i] = Math.max(maxRight[i + 1], height[i]);
+        }
+
+        //求和
+        int sum = 0;
+        for(int i = 0; i < len; i++){
+            int count = Math.min(maxLeft[i], maxRight[i]) - height[i];
+            if(count > 0){
+                sum += count;
+            }
+        }
+        return sum;
+    }
 }

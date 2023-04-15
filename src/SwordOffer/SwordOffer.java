@@ -10,6 +10,7 @@ public class SwordOffer {
         myPow2(2, 5);
         exchange2(new int[]{1, 2, 3, 4});
         verifyPostorder(new int[]{1, 2, 3, 4, 5});
+        translateNum(25);
     }
 
     /**
@@ -1235,14 +1236,77 @@ public class SwordOffer {
     //回溯
     static int resNum;
     public static int translateNum(int num){
-
+        String numString = String.valueOf(num);
+        backtracking(numString, 0);
+        return resNum;
     }
 
     public static void backtracking(String numString, int index){
         //终止条件
         if(index == numString.length()){
-            
+            resNum++;
+            return;
         }
+        for(int i = index; i < numString.length(); i++){
+            String cur = numString.substring(index, i + 1);//判断
+            if(isTran(cur)){
+                backtracking(numString, i + 1);
+            }else {
+                break;
+            }
+        }
+    }
+
+    public static boolean isTran(String cur){
+        if(cur.length() >= 2 && cur.charAt(0) == '0'){
+            return false;
+        }
+        if(cur.length() > 2){
+            return false;
+        }
+        int curNum = Integer.valueOf(cur);
+        if(curNum >= 0 && curNum <= 25){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    public static int translateNum2(int num){
+        String s = String.valueOf(num);
+        int len = s.length();
+        int[] dp = new int[len + 1];
+        //初始化
+        dp[0] = 1;
+        dp[1] = 1;
+        for(int i = 2; i <= len; i++){
+            String temp = s.substring(i - 2, i);
+            int tempNum = Integer.valueOf(temp);
+            if(tempNum >= 10 && tempNum <= 25){
+                dp[i] = dp[i - 1] + dp[i - 2];
+            }else {
+                dp[i] = dp[i - 1];
+            }
+        }
+        return dp[len];
+    }
+
+    /**
+     * 题目：剑指offer 47 礼物的最大价值
+     */
+    //动态规划
+    public static int maxValue(int[][] grid){
+        int len = grid[0].length;
+        int wide = grid.length;
+        //创建dp数组 初始化
+        int[][] dp = new int[wide + 1][len + 1];
+
+        for(int i = 1; i <= wide; i++){
+            for(int j = 1; j <= len; j++){
+                dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]) + grid[i - 1][j - 1];
+            }
+        }
+        return dp[wide][len];
     }
 
 
