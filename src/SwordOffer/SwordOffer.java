@@ -11,6 +11,7 @@ public class SwordOffer {
         exchange2(new int[]{1, 2, 3, 4});
         verifyPostorder(new int[]{1, 2, 3, 4, 5});
         translateNum(25);
+        lengthOfLongestSubstring("abcabcbb");
     }
 
     /**
@@ -1307,6 +1308,76 @@ public class SwordOffer {
             }
         }
         return dp[wide][len];
+    }
+
+    /**
+     * 题目：剑指offer 48 最长不含重复字符的字符串
+     */
+    //动态规划 哈希表
+    public static int lengthOfLongestSubstring(String s){
+        if(s == null || s.length() == 0){
+            return 0;
+        }
+        Map<Character, Integer> dic = new HashMap<>();
+        int res = 1;
+        //dp[j]表示以字符s[j]为结尾的最长不重复子字符串
+        int[] dp = new int[s.length()];
+        dp[0] = 1;
+        dic.put(s.charAt(0), 0);
+        for(int j = 1; j < s.length(); j++){
+            int i = dic.getOrDefault(s.charAt(j), -1);//获取索引i
+            dic.put(s.charAt(j), j);//更新哈希表
+            if(dp[j - 1] < j - i){
+                dp[j] = dp[j - 1] + 1;
+            }else {
+                dp[j] = j - i;
+            }
+            res = Math.max(res, dp[j]);
+        }
+        return res;
+
+    }
+
+    //滑动窗口
+    public static int lengthOfLongestSubstring2(String s){
+        Map<Character, Integer> dic = new HashMap<>();
+        int i = -1;
+        int res = 0;
+        for(int j = 0; j < s.length(); j++){
+            if(dic.containsKey(s.charAt(j))){
+                i = Math.max(i, dic.get(s.charAt(j)));//更新左指针
+            }
+            dic.put(s.charAt(j), j);
+            res = Math.max(res, j - i);
+        }
+        return res;
+    }
+
+    /**
+     * 题目：剑指offer 49 丑数
+     */
+    public static int nthUglyNumber(int n){
+        int a = 0;
+        int b = 0;
+        int c = 0;
+        int[] dp = new int[n];
+        dp[0] = 1;
+        for(int i = 1; i < n; i++){
+            int n2 = dp[a] * 2;
+            int n3 = dp[b] * 3;
+            int n5 = dp[c] * 5;
+            dp[i] = Math.min(n2, Math.min(n3, n5));
+            if(dp[i] == n2){
+                a++;
+            }
+            if(dp[i] == n3){
+                b++;
+            }
+            if(dp[i] == n5){
+                c++;
+            }
+        }
+        return dp[n - 1];
     }
 
 
