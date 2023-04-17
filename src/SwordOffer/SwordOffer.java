@@ -1380,6 +1380,111 @@ public class SwordOffer {
         return dp[n - 1];
     }
 
+    /**
+     * 题目：剑指offer 50 第一个只出现一次的字符
+     */
+    //使用hash表
+    public static char firstUniqChar(String s){
+        Map<Character, Integer> map = new HashMap<>();
+        for(int i = 0; i < s.length(); i++){
+            char ch = s.charAt(i);
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
+        for(int i = 0; i < s.length(); i++){
+            if(map.get(s.charAt(i)) == 1){
+                return s.charAt(i);
+            }
+        }
+        return ' ';
+    }
+
+    //只有字母 使用数组
+    public static char firstUniqChar2(String s){
+        int[] cnt = new int[26];
+        for(int i = 0; i < s.length(); i++){
+            char ch = s.charAt(i);
+            cnt[ch - 'a'] += 1;
+        }
+
+        for(int i = 0; i < s.length(); i++){
+            char ch = s.charAt(i);
+            if(cnt[ch - 'a'] == 1){
+                return ch;
+            }
+        }
+        return ' ';
+    }
+
+    /**
+     * 题目：剑指offer 51 数组中的逆序对
+     */
+    //超时
+    public static int reversePairs(int[] nums){
+        if(nums == null || nums.length == 0){
+            return 0;
+        }
+        if(nums.length == 1){
+            return 0;
+        }
+        int res = 0;
+        for(int slow = 0; slow < nums.length - 1; slow++){
+            for(int fast = slow + 1; fast < nums.length; fast++){
+                if(nums[slow] > nums[fast]){
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+
+    //归并排序
+    static int count;
+    public static int reversePairs2(int[] nums){
+        count = 0;
+        merge(nums, 0, nums.length - 1);
+        return count;
+    }
+
+    //分
+    public static void merge(int[] nums, int left, int right){
+        int mid = left + (right - left) / 2;
+        if(left < right){
+            merge(nums, left, mid);
+            merge(nums, mid + 1, right);
+            mergeSort(nums, left, mid, right);
+        }
+    }
+
+    //合
+    public static void mergeSort(int[] nums, int left, int mid, int right){
+        int[] tempArr = new int[right - left + 1];
+        int index = 0;
+        int temp1 = left;
+        int temp2 = mid + 1;
+
+        while(temp1 <= mid && temp2 <= right){
+            if(nums[temp1] <= nums[temp2]){
+                tempArr[index++] = nums[temp1++];
+            }else {
+                //用来统计逆序对的个数
+                count += (mid - temp1 + 1);//左右数组是有序的 所以比temp2大的是temp1之后的
+                tempArr[index++] = nums[temp2++];
+            }
+        }
+        //把左边剩余的数移入数组
+        while(temp1 <= mid){
+            tempArr[index++] = nums[temp1++];
+        }
+        //把右边剩余的数移入数组
+        while(temp2 <= right){
+            tempArr[index++] = nums[temp2++];
+        }
+        //把新数组中数覆盖nums数组
+        for(int k = 0; k < tempArr.length; k++){
+            nums[k + left] = tempArr[k];
+        }
+    }
+
 
 
 

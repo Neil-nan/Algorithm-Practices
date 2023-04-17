@@ -1,9 +1,6 @@
 package leecode02;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 public class BinaryTree {
 
@@ -71,6 +68,30 @@ public class BinaryTree {
         list.add(root.val);
     }
 
+    //迭代法
+    public static List<Integer> postorderTraversal2(TreeNode root){
+        List<Integer> res = new ArrayList<>();
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        if(root == null){
+            return res;
+        }
+        stack.push(root);
+        //左右中  中右左
+        while(!stack.isEmpty()){
+            TreeNode node = stack.pop();
+            res.add(root.val);
+            if(node.left != null){
+                stack.push(node.left);
+            }
+            if(node.right != null){
+                stack.push(node.right);
+            }
+        }
+
+        Collections.reverse(res);//记住方法
+        return res;
+    }
+
     /**
      * 题目：94 二叉树的中序遍历
      */
@@ -90,6 +111,29 @@ public class BinaryTree {
         inorder(root.left, list);
         list.add(root.val);
         inorder(root.right, list);
+    }
+
+    //迭代方法
+    public static List<Integer> inorderTraversal2(TreeNode root){
+        List<Integer> res = new ArrayList<>();
+        if(root == null){
+            return res;
+        }
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        //创建指针
+        TreeNode cur = root;
+        while(cur != null || !stack.isEmpty()){
+            if(cur != null){
+                stack.push(cur);
+                cur = cur.left;
+            }else {
+                cur = stack.pop();
+                res.add(cur.val);
+                cur = cur.right;
+            }
+        }
+
+        return res;
     }
 }
 

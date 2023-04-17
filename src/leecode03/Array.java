@@ -11,6 +11,7 @@ public class Array {
         int[] nums1 = new int[]{1, 2};
         int[] nums2 = new int[]{3, 4};
         findMedianSortedArrays(nums1, nums2);
+        firstMissingPositive(new int[]{1, 2, 0});
     }
     /**
      * 题目：15 三数之和
@@ -543,5 +544,126 @@ public class Array {
         }
         res.add(new int[]{left, right});
         return res.toArray(new int[res.size()][]);
+    }
+
+    /**
+     * 题目：31 下一个排列
+     */
+    public static void nextPermutation(int[] nums) {
+        if(nums == null || nums.length == 0){
+            return;
+        }
+        if(nums.length == 1){
+            return;
+        }
+
+        //找到 A[i] < A[j] 从后先前
+        int i = nums.length - 2;
+        int j = nums.length - 1;
+        while(i >= 0){
+            if(nums[i] < nums[j]){
+                break;
+            }
+            i--;
+            j--;
+        }
+
+        //如果是最后一个
+        if(i == -1){
+            //重新来过
+            Arrays.sort(nums);
+            return;
+        }
+
+        //从(j, end)中找到第一个令 A[i] < A[k] 的k值 这个区间中的数都是降序的
+        int k;
+        for(k = nums.length - 1; k >= j; k--){
+            if(nums[i] < nums[k]){
+                break;
+            }
+        }
+
+        //得到k 交换i和k
+        swap(nums, i, k);
+
+        //j以后降序 改为升序
+        reverse(nums, j, nums.length - 1);
+
+    }
+
+    public static void reverse(int[] nums, int l, int r){
+        //双指针进行升序
+        while(l < r){
+            swap(nums, l, r);
+            l++;
+            r--;
+        }
+    }
+
+    public static void swap(int[] nums, int i, int k){
+        int temp = nums[i];
+        nums[i] = nums[k];
+        nums[k] = temp;
+    }
+
+    /**
+     * 题目：41 缺失的第一个正数
+     */
+    //原地哈希
+    public static int firstMissingPositive(int[] nums){
+        int len = nums.length;
+        //第一步 将数组中小于等于 0 的数字转化为 len + 1
+        for(int i = 0; i < len; i++){
+            if(nums[i] <= 0){
+                nums[i] = len + 1;
+            }
+        }
+
+        //第二步 将数组中符合在空间 [1, len] 中的数字所应该对应的位置用 - 进行标记
+//        for(int i = 0; i < len; i++){
+//            int num = Math.abs(nums[i]);
+//            if(num <= len){
+//                nums[num - 1] = - Math.abs(nums[num - 1]);
+//            }
+//        }
+
+//        for(int i = 0; i < len; i++){
+//            //int num = Math.abs(nums[i]);
+//            if(nums[i] <= len){
+//                nums[nums[i] - 1] = - Math.abs(nums[nums[i] - 1]);
+//            }
+//        }
+
+
+        //第三步 进行遍历 第一个是正数的位置 就是
+        for(int i = 0; i < len; i++){
+            if(nums[i] > 0){
+                return i + 1;
+            }
+        }
+
+        return len + 1;
+    }
+
+    //置换
+    public static int firstMissingPositive2(int[] nums){
+        //将数字放到属于自己的位置上
+        int len = nums.length;
+        for(int i = 0; i < len; i++){
+            //要一直交换 位置上不能留 好人
+            while(nums[i] > 0 && nums[i] <= len && nums[nums[i] - 1] != nums[i]){
+                //交换
+                int temp = nums[nums[i] - 1];
+                nums[nums[i] - 1] = nums[i];
+                nums[i] = temp;
+            }
+        }
+
+        for(int i = 0; i < len; i++){
+            if(nums[i] != i + 1){
+                return i + 1;
+            }
+        }
+        return len + 1;
     }
 }
