@@ -1,5 +1,6 @@
 package leecode02;
 
+import javax.jnlp.ClipboardService;
 import java.util.*;
 
 public class BinaryTree {
@@ -47,6 +48,34 @@ public class BinaryTree {
         return res;
     }
 
+    //统一迭代法
+    public static List<Integer> preorderTraversal3(TreeNode root){
+        List<Integer> res = new ArrayList<>();
+        if(root == null){
+            return res;
+        }
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        while(!stack.isEmpty()){
+            TreeNode node = stack.pop();
+            if(node != null){
+                if(node.right != null){
+                    stack.push(node.right);
+                }
+                if(node.left != null){
+                    stack.push(node.left);
+                }
+                stack.push(node);
+                stack.push(null);
+            }else {
+                node = stack.pop();
+                res.add(node.val);
+            }
+        }
+        return res;
+
+    }
+
     /**
      * 题目：145 二叉树的后序遍历
      */
@@ -92,6 +121,33 @@ public class BinaryTree {
         return res;
     }
 
+    //统一迭代法
+    public static List<Integer> postorderTraversal3(TreeNode root){
+        List<Integer> res = new ArrayList<>();
+        if(root == null){
+            return res;
+        }
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        while(!stack.isEmpty()){
+            TreeNode node = stack.pop();
+            if(node != null){
+                stack.push(node);
+                stack.push(null);
+                if(node.right != null){
+                    stack.push(node.right);
+                }
+                if(node.left != null){
+                    stack.push(node.left);
+                }
+            }else {
+                node = stack.pop();
+                res.add(node.val);
+            }
+        }
+        return res;
+    }
+
     /**
      * 题目：94 二叉树的中序遍历
      */
@@ -133,6 +189,149 @@ public class BinaryTree {
             }
         }
 
+        return res;
+    }
+
+    //使用统一迭代法
+    //右中左 进入栈中
+    public static List<Integer> inorderTraversal3(TreeNode root){
+        List<Integer> res = new ArrayList<>();
+        if(root == null){
+            return res;
+        }
+
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        while(!stack.isEmpty()){
+            TreeNode node = stack.pop();
+            if(node != null){
+                if(node.right != null){
+                    stack.push(node.right);
+                }
+                stack.push(node);
+                stack.push(null);
+                if(node.left != null){
+                    stack.push(node.left);
+                }
+            }else {
+                node = stack.pop();
+                res.add(node.val);
+            }
+        }
+
+        return res;
+
+    }
+
+    /**
+     * 题目：102 二叉树的层序遍历
+     */
+    //迭代法
+    public static List<List<Integer>> levelOrder(TreeNode root){
+        List<List<Integer>> res = new ArrayList<>();
+        if(root == null){
+            return res;
+        }
+        Deque<TreeNode> que = new ArrayDeque<>();
+        que.offer(root);
+        while(!que.isEmpty()){
+            int size = que.size();
+            List<Integer> list = new ArrayList<>();
+            for(int i = 0; i < size; i++){
+                TreeNode temp = que.poll();
+                list.add(temp.val);
+                if(temp.left != null){
+                    que.offer(temp.left);
+                }
+                if(temp.right != null){
+                    que.offer(temp.right);
+                }
+            }
+            res.add(list);
+        }
+        return res;
+    }
+
+    //递归法
+    public static List<List<Integer>> levelOrder2(TreeNode root){
+        List<List<Integer>> res = new ArrayList<>();
+        checkFun(root, 0, res);
+        return res;
+    }
+
+    public static void checkFun(TreeNode node, Integer deep, List<List<Integer>> res){
+        if(node == null){
+            return;
+        }
+        deep++;
+        if(res.size() < deep){
+            List<Integer> item = new ArrayList<>();
+            res.add(item);
+        }
+        res.get(deep - 1).add(node.val);
+
+        checkFun(node.left, deep, res);
+        checkFun(node.right, deep, res);
+    }
+
+    /**
+     * 题目：107 二叉树的层序遍历II
+     */
+    public static List<List<Integer>> levelOrderBottom(TreeNode root){
+        List<List<Integer>> res = new ArrayList<>();
+        if(root == null){
+            return res;
+        }
+        //创建队列
+        Deque<TreeNode> que = new ArrayDeque<>();
+        que.offer(root);
+
+        while(!que.isEmpty()){
+            int len = que.size();
+            List<Integer> list = new ArrayList<>();
+            for(int i = 0; i < len; i++){
+                TreeNode node = que.poll();
+                list.add(node.val);
+                if(node.left != null){
+                    que.offer(node.left);
+                }
+                if(node.right != null){
+                    que.offer(node.right);
+                }
+            }
+            res.add(list);
+        }
+        Collections.reverse(res);
+        return res;
+    }
+
+    /**
+     * 题目：199 二叉树的右视图
+     */
+    public static List<Integer> rightSideView(TreeNode root){
+        List<Integer> res = new ArrayList<>();
+        if(root == null){
+            return res;
+        }
+
+        Deque<TreeNode> que = new ArrayDeque<>();
+        que.offer(root);
+
+        while(!que.isEmpty()){
+            int len = que.size();
+            for(int i = 0; i < len; i++){
+                TreeNode node = que.poll();
+                if(i == len - 1){
+                    res.add(node.val);
+                }
+                if(node.left != null){
+                    que.offer(node.left);
+                }
+                if(node.right != null){
+                    que.offer(node.right);
+                }
+            }
+        }
         return res;
     }
 }

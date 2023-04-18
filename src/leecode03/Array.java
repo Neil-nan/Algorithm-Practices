@@ -1,5 +1,6 @@
 package leecode03;
 
+
 import java.util.*;
 
 /**
@@ -665,5 +666,218 @@ public class Array {
             }
         }
         return len + 1;
+    }
+
+    /**
+     * 题目：105 从前序与中序遍历序列构造二叉树
+     */
+    public static TreeNode buildTree(int[] preorder, int[] inorder) {
+        if(preorder == null || preorder.length == 0 || inorder == null || inorder.length == 0){
+            return null;
+        }
+        return build(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1);
+    }
+
+    //前闭后闭区间
+    public static TreeNode build(int[] preorder, int preBegin, int preEnd, int[] inorder, int inBegin, int inEnd){
+        //终止条件
+        if(preBegin > preEnd || inBegin > inEnd){
+            return null;
+        }
+        //确定中间节点
+        int rootValue = preorder[preBegin];
+        TreeNode root = new TreeNode(rootValue);
+        //判断是不是叶子节点
+        if(preorder.length == 1){
+            return root;
+        }
+        //找到中序遍历的位置
+        int spaceIn;
+        for(spaceIn = inBegin; spaceIn <= inEnd; spaceIn++){
+            if(rootValue == inorder[spaceIn]){
+                break;
+            }
+        }
+        int lenOfLeft = spaceIn - inBegin;
+        root.left = build(preorder, preBegin + 1, preBegin + 1 + lenOfLeft - 1, inorder, inBegin, inBegin + lenOfLeft);
+        root.right = build(preorder, preBegin + 1 + lenOfLeft, preEnd, inorder, spaceIn + 1, inEnd);
+
+        return root;
+    }
+
+    /**
+     * 题目：78 子集
+     */
+    static List<List<Integer>> res = new ArrayList<>();
+    public static List<List<Integer>> subsets(int[] nums) {
+        List<Integer> list = new ArrayList<>();
+        backtracking(nums, 0, list);
+        return res;
+    }
+
+    //全部
+    public static void backtracking(int[] nums, int index, List<Integer> list){
+        res.add(new ArrayList<>(list));
+        //终止条件
+        if(index >= nums.length){
+            return;
+        }
+
+        for(int i = index; i < nums.length; i++){
+            list.add(nums[i]);
+            backtracking(nums, i + 1, list);
+            list.remove(list.size() - 1);
+        }
+    }
+
+    /**
+     * 题目：64 最小路径和
+     */
+    //使用动态规划
+    public static int minPathSum(int[][] grid){
+        if(grid == null || grid.length == 0 || grid[0].length == 0){
+            return 0;
+        }
+        int wide = grid.length;
+        int len = grid[0].length;
+
+        //创建dp数组 初始化
+        int[][] dp = new int[wide][len];
+        dp[0][0] = grid[0][0];
+        for(int i = 1; i < len; i++){
+            dp[0][i] = dp[0][i - 1] + grid[0][i];
+        }
+
+        for(int i = 1; i < wide; i++){
+            dp[i][0] = dp[i - 1][0] + grid[i][0];
+        }
+
+        for(int i = 1; i < wide; i++){
+            for(int j = 1; j < len; j++){
+                dp[i][j] = Math.min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j];
+            }
+        }
+
+        return dp[wide - 1][len - 1];
+    }
+
+    //进阶 打印出路径
+    public static int minPathSum2(int[][] grid){
+        if(grid == null || grid.length == 0 || grid[0].length == 0){
+            return 0;
+        }
+        int wide = grid.length;
+        int len = grid[0].length;
+
+        int[][] dp = new int[wide][len];
+        int[] cnt = new int[wide * len];
+
+        //这里从后向前进行便利 结果相同 但是方便输出路径
+        for(int i = len - 1; i >= 0; i--){
+            for(int j = wide - 1; j >= 0; j--){
+                if(i == len - 1 && j == wide - 1){
+                    dp[i][j] = grid[i][j];
+                }else {
+                    //处理两个边界问题
+                    int bottom;
+                    int right;//从右侧和从下边来的分别的大小
+                    if(i + 1 < wide){
+                        bottom = dp[i + 1][j] + grid[i][j];
+                    }else {
+                        bottom = Integer.MAX_VALUE;
+                    }
+                    if(j + 1 < len){
+                        right = dp[i][j + 1] + grid[i][j];
+                    }else {
+                        right = Integer.MAX_VALUE;
+                    }
+                    dp[i][j] = Math.min(bottom, right);
+                    if(bottom < right){
+                        cnt[getIndex(i, j, len)] = getIndex(i + 1, j, len);
+                    }else {
+                        cnt[getIndex(i, j, len)] = getIndex(i, j + 1, len);//数组的位置代表着dp数组中位置 对应的数值则为前一个点的位置
+                    }
+                }
+            }
+        }
+
+        int index = getIndex(0, 0, len);
+        for(int i = 1; i <= wide + len; i++){
+            if(i == wide + len){
+                continue;
+            }
+            int x = parseIdx(index, len)[0];
+            int y = parseIdx(index, len)[1];
+            System.out.print("(" + x + "," + y + ") ");
+            index = cnt[index];
+        }
+        System.out.println(" ");
+        return dp[0][0];
+    }
+
+    public static int[] parseIdx(int index, int len){
+        return new int[]{index / len, index % len};
+    }
+
+    public static int getIndex(int x, int y, int len){
+        return x * len + y;
+    }
+
+    /**
+     * 题目：48 旋转图像
+     */
+    //延水平线进行翻转 再延对角线进行翻转
+    public static void rotate(int[][] matrix){
+        int len = matrix.length;
+        //水平翻转
+        for(int i = 0; i < len / 2; i++){
+            for(int j = 0; j < len; j++){
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[len - i - 1][j];
+                matrix[len - i - 1][j] = temp;
+            }
+        }
+
+        //对角线翻转
+        for(int i = 0; i < len; i++){
+            for(int j = 0; j < i; j++){
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = temp;
+            }
+        }
+    }
+
+    //原地旋转
+    public static void rotate2(int[][] matrix){
+        int len = matrix.length;
+        for(int i = 0; i < len / 2; i++){
+            for(int j = 0; j < (len + 1) / 2; j++){
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[len - j - 1][i];
+                matrix[len - j - 1][i] = matrix[len - i - 1][len - j - 1];
+                matrix[len - i - 1][len - j - 1] = matrix[j][len - i - 1];
+                matrix[j][len - i - 1] = temp;
+            }
+        }
+    }
+}
+
+class TreeNode{
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    public TreeNode() {
+    }
+
+    public TreeNode(int val) {
+        this.val = val;
+    }
+
+    public TreeNode(int val, TreeNode left, TreeNode right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
     }
 }
