@@ -12,6 +12,7 @@ public class SwordOffer {
         verifyPostorder(new int[]{1, 2, 3, 4, 5});
         translateNum(25);
         lengthOfLongestSubstring("abcabcbb");
+        search(new int[]{5, 7, 7, 8, 8, 10}, 8);
     }
 
     /**
@@ -1485,6 +1486,102 @@ public class SwordOffer {
         }
     }
 
+    /**
+     * 题目：剑指offer 52 两个链表的第一个公共节点
+     */
+    public static ListNode getIntersectionNode(ListNode headA, ListNode headB){
+        //找A和B的长度
+        int lenA = 0;
+        ListNode curA = headA;
+        while(curA != null){
+            lenA++;
+            curA = curA.next;
+        }
+        int lenB = 0;
+        ListNode curB = headB;
+        while(curB != null){
+            lenB++;
+            curB = curB.next;
+        }
+
+        //默认A < B
+        if(lenA > lenB){
+            int temp = lenA;
+            lenA = lenB;
+            lenB = temp;
+            ListNode tempNode = headA;
+            headA = headB;
+            headB = tempNode;
+        }
+
+        curA = headA;
+        curB = headB;
+        //让B先走
+        for(int i = 0; i < lenB - lenA; i++){
+            curB = curB.next;
+        }
+        //一起走
+        while (curA != null && curB != null){
+            if(curA == curB){
+                return curA;
+            }
+            curA = curA.next;
+            curB = curB.next;
+        }
+
+        return null;
+
+    }
+
+    /**
+     * 题目：剑指offer 53 - I 在排序数组中查找数字I
+     */
+    //双指针
+    public static int search(int[] nums, int target){
+        if(nums == null || nums.length == 0){
+            return 0;
+        }
+        Arrays.sort(nums);
+        if(target < nums[0] || target > nums[nums.length - 1]){
+            return 0;
+        }
+        //创建双指针
+        int left = findLeftBoundary(nums, target);
+        int right = findRightBoundary(nums, target);
+        if(right < left){
+            return 0;
+        }
+        return right - left + 1;
+
+    }
+
+    public static int findLeftBoundary(int[] nums, int target){
+        int left = 0;
+        int right = nums.length - 1;
+        while(left <= right){
+            int mid = left + (right - left) / 2;
+            if(nums[mid] >= target){
+                right = mid - 1;
+            }else {
+                left = mid + 1;
+            }
+        }
+        return right + 1;
+    }
+
+    public static int findRightBoundary(int[] nums, int target){
+        int left = 0;
+        int right = nums.length - 1;
+        while(left <= right){
+            int mid = left + (right - left) / 2;
+            if(nums[mid] > target){
+                right = mid - 1;
+            }else {
+                left = mid + 1;
+            }
+        }
+        return left - 1;
+    }
 
 
 

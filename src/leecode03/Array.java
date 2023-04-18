@@ -1,5 +1,6 @@
 package leecode03;
 
+
 import java.util.*;
 
 /**
@@ -665,5 +666,86 @@ public class Array {
             }
         }
         return len + 1;
+    }
+
+    /**
+     * 题目：105 从前序与中序遍历序列构造二叉树
+     */
+    public static TreeNode buildTree(int[] preorder, int[] inorder) {
+        if(preorder == null || preorder.length == 0 || inorder == null || inorder.length == 0){
+            return null;
+        }
+        return build(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1);
+    }
+
+    //前闭后闭区间
+    public static TreeNode build(int[] preorder, int preBegin, int preEnd, int[] inorder, int inBegin, int inEnd){
+        //终止条件
+        if(preBegin > preEnd || inBegin > inEnd){
+            return null;
+        }
+        //确定中间节点
+        int rootValue = preorder[preBegin];
+        TreeNode root = new TreeNode(rootValue);
+        //判断是不是叶子节点
+        if(preorder.length == 1){
+            return root;
+        }
+        //找到中序遍历的位置
+        int spaceIn;
+        for(spaceIn = inBegin; spaceIn <= inEnd; spaceIn++){
+            if(rootValue == inorder[spaceIn]){
+                break;
+            }
+        }
+        int lenOfLeft = spaceIn - inBegin;
+        root.left = build(preorder, preBegin + 1, preBegin + 1 + lenOfLeft - 1, inorder, inBegin, inBegin + lenOfLeft);
+        root.right = build(preorder, preBegin + 1 + lenOfLeft, preEnd, inorder, spaceIn + 1, inEnd);
+
+        return root;
+    }
+
+    /**
+     * 题目：78 子集
+     */
+    static List<List<Integer>> res = new ArrayList<>();
+    public static List<List<Integer>> subsets(int[] nums) {
+        List<Integer> list = new ArrayList<>();
+        backtracking(nums, 0, list);
+        return res;
+    }
+
+    //全部
+    public static void backtracking(int[] nums, int index, List<Integer> list){
+        res.add(new ArrayList<>(list));
+        //终止条件
+        if(index >= nums.length){
+            return;
+        }
+
+        for(int i = index; i < nums.length; i++){
+            list.add(nums[i]);
+            backtracking(nums, i + 1, list);
+            list.remove(list.size() - 1);
+        }
+    }
+}
+
+class TreeNode{
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    public TreeNode() {
+    }
+
+    public TreeNode(int val) {
+        this.val = val;
+    }
+
+    public TreeNode(int val, TreeNode left, TreeNode right) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
     }
 }
