@@ -1632,6 +1632,84 @@ public class SwordOffer {
     }
 
 
+    /**
+     * 题目：剑指offer 55-I 二叉树的深度
+     */
+    //层序遍历
+    public static int maxDepth(TreeNode root){
+        int res = 0;
+        if(root == null){
+            return res;
+        }
+        Deque<TreeNode> que = new ArrayDeque<>();
+        que.offer(root);
+        while(!que.isEmpty()){
+            int len = que.size();
+            res++;
+            for(int i = 0; i < len; i++){
+                TreeNode node = que.poll();
+                if(node.left != null){
+                    que.offer(node.left);
+                }
+                if(node.right != null){
+                    que.offer(node.right);
+                }
+            }
+        }
+        return res;
+    }
+
+    //使用递归
+    //static int resInt;
+    public static int maxDepth2(TreeNode root){
+        resInt = 0;
+        depth(root, 0);
+        return resInt;
+    }
+
+    public static void depth(TreeNode root, int depth){
+        //终止条件
+        if(root == null){
+            return;
+        }
+        depth++;
+        resInt = Math.max(resInt, depth);
+        depth(root.left, depth);
+        depth(root.right, depth);
+    }
+
+    /**
+     * 题目：剑指offer 55-II 平衡二叉树
+     */
+    public static boolean isBalanced(TreeNode root){
+        return getHeight(root) != -1;
+    }
+
+    public static int getHeight(TreeNode root){
+        //终止条件
+        if(root == null){
+            return 0;
+        }
+
+        int leftHeight = getHeight(root.left);
+        int rightHeight = getHeight(root.right);
+
+        //左子树中有不满足的情况
+        if(leftHeight == -1){
+            return -1;
+        }
+        //右子树中有不满足的情况
+        if(rightHeight == -1){
+            return -1;
+        }
+
+        //判断该节点的左右子树
+        if(Math.abs(leftHeight - rightHeight) > 1){
+            return -1;
+        }else {
+            return Math.max(leftHeight, rightHeight) + 1;
+        }
+    }
 
 
 

@@ -861,6 +861,63 @@ public class Array {
             }
         }
     }
+
+    /**
+     * 题目：39 组合总和
+     */
+    //回溯
+    static List<List<Integer>> resInteger = new ArrayList<>();
+    public static List<List<Integer>> combinationSum(int[] candidates, int target){
+        //排序
+        Arrays.sort(candidates);
+        List<Integer> list = new ArrayList<>();
+        backtracking(candidates, target, 0, 0, list);
+        return resInteger;
+    }
+
+    //纵向可以使用 横向不能使用（不重复 不用去重）
+    public static void backtracking(int[] candidates, int target, int sum, int index, List<Integer> list){
+        //终止条件
+        if(sum == target){
+            resInteger.add(new ArrayList<>(list));
+            return;
+        }
+
+        for(int i = index; i < candidates.length; i++){
+            sum += candidates[i];
+            list.add(candidates[i]);
+            if(sum > target){//没有继续的必要了
+                sum -= candidates[i];
+                list.remove(list.size() - 1);
+                return;
+            }
+            backtracking(candidates, target, sum, i, list);
+            //回溯
+            list.remove(list.size() - 1);
+            sum -= candidates[i];
+        }
+    }
+
+    /**
+     * 题目：169 多数元素
+     */
+    public static int majorityElement(int[] nums){
+        int count = 0;
+        Integer candidate = null;
+        for (int num : nums) {
+            if(count == 0){
+                candidate = num;
+            }
+            if(candidate != num){
+                count--;
+            }else {
+                count++;
+            }
+        }
+        return candidate;
+    }
+
+
 }
 
 class TreeNode{
