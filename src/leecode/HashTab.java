@@ -1,6 +1,5 @@
 package leecode;
 
-import javafx.scene.control.skin.SliderSkin;
 
 import javax.print.DocFlavor;
 import java.util.*;

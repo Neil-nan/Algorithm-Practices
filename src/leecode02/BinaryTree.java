@@ -388,6 +388,66 @@ public class BinaryTree {
         }
         return res;
     }
+
+    /**
+     * 题目：515 在每个树行中找最大值
+     */
+    public static List<Integer> largestValues(TreeNode root){
+        List<Integer> res = new ArrayList<>();
+        if(root == null){
+            return res;
+        }
+        Deque<TreeNode> que = new ArrayDeque<>();
+        que.offer(root);
+
+        while(!que.isEmpty()){
+            int len = que.size();
+            int ans = Integer.MIN_VALUE;
+            for(int i = 0; i < len; i++){
+                TreeNode node = que.poll();
+                ans = Math.max(ans, node.val);
+                if(node.left != null){
+                    que.offer(node.left);
+                }
+                if(node.right != null){
+                    que.offer(node.right);
+                }
+            }
+            res.add(ans);
+        }
+        return res;
+    }
+
+    /**
+     * 题目：116 填充每个节点的下一个右侧节点指针
+     */
+    public static Node connect(Node root) {
+        if(root == null){
+            return null;
+        }
+        Deque<Node> que = new ArrayDeque<>();
+        que.offer(root);
+
+        while(!que.isEmpty()){
+            int len = que.size();
+            for(int i = 0; i < len; i++){
+                Node node = que.poll();
+                if(i == len - 1){
+                    node.next = null;
+                }else{
+                    node.next = que.peek();
+                }
+                if(node.left != null){
+                    que.offer(node.left);
+                }
+                if(node.right != null){
+                    que.offer(node.right);
+                }
+            }
+        }
+
+        return root;
+    }
 }
 
 //创建节点
@@ -416,11 +476,26 @@ class Node{
     int val;
     List<Node> children;
 
+    Node left;
+    Node right;
+    Node next;
+
     public Node() {
     }
 
     public Node(int val, List<Node> children) {
         this.val = val;
         this.children = children;
+    }
+
+    public Node(int val) {
+        this.val = val;
+    }
+
+    public Node(int val, Node left, Node right, Node next) {
+        this.val = val;
+        this.left = left;
+        this.right = right;
+        this.next = next;
     }
 }

@@ -917,6 +917,77 @@ public class Array {
         return candidate;
     }
 
+    /**
+     * 题目：718 最长重复子数组
+     */
+    //使用动态规划
+    public static int findLength(int[] nums1, int[] nums2){
+        int len1 = nums1.length;
+        int len2 = nums2.length;
+        int res = 0;
+
+        //创建dp数组
+        int[][] dp = new int[len1 + 1][len2 + 1];
+
+        for(int i = 1; i <= len1; i++){
+            for(int j = 1; j <= len2; j++){
+                if(nums1[i - 1] == nums2[j - 1]){
+                    dp[i][j] = dp[i- 1][j - 1] + 1;
+                }
+                res = Math.max(res, dp[i][j]);
+            }
+        }
+        return res;
+    }
+
+    /**
+     * 题目：34 在排序数组中查找元素的第一个和最后一个位置
+     */
+    public static int[] searchRange(int[] nums, int target){
+        int[] res = new int[]{-1, -1};
+        if(nums == null || nums.length == 0){
+            return res;
+        }
+        if(nums[0] > target || nums[nums.length - 1] < target){
+            return res;
+        }
+        int left = findLeft(nums, target);
+        int right = findRight(nums, target);
+        if(right - left > 1){
+            return new int[]{left + 1, right - 1};
+        }
+        return res;
+
+    }
+
+    public static int findLeft(int[] nums, int target){
+        int left = 0;
+        int right = nums.length - 1;
+        while(left <= right){
+            int mid = left + (right - left) / 2;
+            if(nums[mid] < target){
+                left = mid + 1;
+            }else {
+                right = mid - 1;
+            }
+        }
+        return right;
+    }
+
+    public static int findRight(int[] nums, int target){
+        int left = 0;
+        int right = nums.length - 1;
+        while(left <= right){
+            int mid = left + (right - left) / 2;
+            if(nums[mid] <= target){
+                left = mid + 1;
+            }else {
+                right = mid - 1;
+            }
+        }
+        return left;
+    }
+
 
 }
 
