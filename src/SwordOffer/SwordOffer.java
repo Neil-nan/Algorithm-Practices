@@ -1764,6 +1764,82 @@ public class SwordOffer {
         return -1;
     }
 
+    /**
+     * 题目：剑指offer 57 和为s的两个数字
+     */
+    //使用hashmap
+    public static int[] twoSum(int[] nums, int target){
+        int[] res = new int[2];
+        if(nums == null || nums.length == 0){
+            return res;
+        }
+        //key 数(target - num)  value 位置
+        Set<Integer> set = new HashSet<>();
+        for(int i = 0; i < nums.length; i++){
+            int num = target - nums[i];
+            if(set.contains(num)){
+                res[0] = nums[i];
+                res[1] = num;
+                break;
+            }
+            set.add(nums[i]);
+        }
+        return res;
+    }
+
+    //使用双指针
+    public static int[] twoSum2(int[] nums, int target){
+        int[] res = new int[2];
+        if(nums == null || nums.length == 0){
+            return res;
+        }
+
+        int left = 0;
+        int right = nums.length - 1;
+        while(left < right){
+            int sum = nums[left] + nums[right];
+            if(sum < target){
+                left++;
+            }else if(sum > target){
+                right--;
+            }else {
+                return new int[]{nums[left], nums[right]};
+            }
+        }
+        return new int[0];
+    }
+
+    /**
+     * 题目：剑指offer 57 -II 和为s的连续正数序列
+     */
+    //滑动窗口
+    public static int[][] findContinuousSequence(int target){
+        int left = 1;
+        int right = 2;
+        int sum = 3;
+        List<int[]> res = new ArrayList<>();
+        while(left < right){
+            if(sum == target){
+                int[] ans = new int[right - left + 1];
+                for(int i = left; i <= right; i++){
+                    ans[i - left] = i;
+                }
+                res.add(ans);
+            }
+            if(sum >= target){
+                sum -= left;
+                left++;
+            }else {
+                right++;
+                sum += right;
+            }
+        }
+        //https://blog.csdn.net/littlehaes/article/details/105553431
+        return res.toArray(new int[res.size()][]);
+    }
+
+
+
 
 
 

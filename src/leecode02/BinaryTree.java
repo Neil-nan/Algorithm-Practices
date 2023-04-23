@@ -448,6 +448,64 @@ public class BinaryTree {
 
         return root;
     }
+
+    /**
+     * 题目：117 填充每个节点的下一个右侧节点II
+     */
+    public static Node connect2(Node root){
+        if(root == null){
+            return root;
+        }
+
+        Deque<Node> que = new ArrayDeque<>();
+        que.offer(root);
+
+        while(!que.isEmpty()){
+            int len = que.size();
+            for(int i = 0; i < len; i++){
+                Node node = que.poll();
+                if(i == len - 1){
+                    node.next = null;
+                }else {
+                    node.next = que.peek();
+                }
+                if(node.left != null){
+                    que.offer(node.left);
+                }
+                if(node.right != null){
+                    que.offer(node.right);
+                }
+            }
+        }
+        return root;
+    }
+
+    /**
+     * 题目：104 二叉树的最大深度
+     */
+    public static int maxDepth(TreeNode root){
+        int res = 0;
+        if(root == null){
+            return res;
+        }
+
+        Deque<TreeNode> que = new ArrayDeque<>();
+        que.offer(root);
+        while(!que.isEmpty()){
+            int len = que.size();
+            for(int i = 0; i < len; i++){
+                TreeNode node = que.poll();
+                if(node.left != null){
+                    que.offer(node.left);
+                }
+                if(node.right != null){
+                    que.offer(node.right);
+                }
+            }
+            res++;
+        }
+        return res;
+    }
 }
 
 //创建节点
