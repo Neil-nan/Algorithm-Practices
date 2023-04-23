@@ -1838,6 +1838,90 @@ public class SwordOffer {
         return res.toArray(new int[res.size()][]);
     }
 
+    /**
+     * 题目：剑指offer 58 - II 翻转单词顺序
+     */
+    //去除空格
+    //反转整个字符串
+    //反转每个单词
+    public static String reverseWords(String s){
+        if(s == ""){
+            return s;
+        }
+        //去除空格
+        StringBuffer sb = reverseSpace(s);
+        //反转整个字符串
+        reverse(sb, 0, sb.length() - 1);
+        //反转单词
+        int index = 0;
+        for(int i = 0; i < sb.length(); i++){
+            if(sb.charAt(i) == ' '){
+                reverse(sb, index, i - 1);
+                index = i + 1;
+            }
+        }
+
+        reverse(sb, index, sb.length() - 1);
+        return sb.toString();
+    }
+
+    //去除空格
+    public static StringBuffer reverseSpace(String s){
+        int left = 0;
+        int right = s.length() - 1;
+
+        while(left <= right && s.charAt(left) == ' '){
+            left++;
+        }
+        while(left <= right && s.charAt(right) == ' '){
+            right--;
+        }
+
+        StringBuffer sb = new StringBuffer();
+        for(int i = left; i <= right; i++){
+            char ch = s.charAt(i);
+            if(ch != ' ' || s.charAt(i - 1) != ' '){
+                sb.append(ch);
+            }
+        }
+        return sb;
+    }
+
+    //翻转方法
+    public static void reverse(StringBuffer sb, int start, int end){
+        while(start <= end){
+            char temp = sb.charAt(start);
+            sb.setCharAt(start, sb.charAt(end));
+            sb.setCharAt(end, temp);
+            start++;
+            end--;
+        }
+    }
+
+    /**
+     * 题目：剑指offer 58 - II 左旋转字符串
+     */
+    //整个旋转 再局部旋转
+    public static String reverseLeftWords(String s, int n){
+        char[] chars = s.toCharArray();
+        //反转整个字符串
+        reverse2(chars, 0, chars.length - 1);
+        //翻转各个部分
+        reverse2(chars, 0, chars.length - n - 1);
+        reverse2(chars, chars.length - n, chars.length - 1);
+        return new String(chars);
+    }
+
+    public static void reverse2(char[] chars, int left, int right){
+        while(left <= right){
+            char temp = chars[left];
+            chars[left] = chars[right];
+            chars[right] = temp;
+            left++;
+            right--;
+        }
+    }
+
 
 
 

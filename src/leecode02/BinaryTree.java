@@ -506,6 +506,80 @@ public class BinaryTree {
         }
         return res;
     }
+
+    /**
+     * 题目：111 二叉树的最小深度
+     */
+    //层序遍历
+    public static int minDepth(TreeNode root){
+        int res = 0;
+        if(root == null){
+            return res;
+        }
+
+        Deque<TreeNode> que = new ArrayDeque<>();
+        que.offer(root);
+        while(!que.isEmpty()){
+            int len = que.size();
+            res++;
+            for(int i = 0; i < len; i++){
+                TreeNode node = que.poll();
+                if(node.left == null && node.right == null){
+                    return res;
+                }
+                if(node.left != null){
+                    que.offer(node.left);
+                }
+                if(node.right != null){
+                    que.offer(node.right);
+                }
+            }
+        }
+        return res;
+    }
+
+    //递归方法
+    public static int minDepth2(TreeNode root){
+        //终止条件
+        if(root == null){
+            return 0;
+        }
+
+        //后序遍历
+        int left = minDepth2(root.left);
+        int right = minDepth2(root.right);
+
+        if(left == 0 && right != 0){
+            return right + 1;
+        }
+        if(left != 0 && right == 0){
+            return left + 1;
+        }
+
+        return 1 + Math.min(left, right);
+
+    }
+
+    /**
+     * 题目：226 翻转二叉树
+     */
+    //递归
+    public static TreeNode invertTree(TreeNode root){
+        //终止条件
+        if(root == null){
+            return null;
+        }
+
+        //前序遍历
+        TreeNode temp = root.left;
+        root.left = root.right;
+        root.right = temp;
+
+        invertTree(root.left);
+        invertTree(root.right);
+        return root;
+    }
+
 }
 
 //创建节点

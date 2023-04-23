@@ -1,5 +1,7 @@
 package leecode03;
 
+import java.util.List;
+
 public class LinkedList {
 
     /**
@@ -80,6 +82,62 @@ public class LinkedList {
             curr = next;
         }
         return pre;
+    }
+
+    /**
+     * 题目：21 合并两个有序链表
+     */
+    public static ListNode mergeTwoLists(ListNode list1, ListNode list2){
+        ListNode dummy = new ListNode(-1);
+        ListNode index = dummy;
+        //创建两个指针
+        ListNode index1 = list1;
+        ListNode index2 = list2;
+
+        while(index1 != null || index2 != null){
+            while(index1 != null && index2 != null){
+                if(index1.val <= index2.val){
+                    index.next = index1;
+                    index1 = index1.next;
+                }else {
+                    index.next = index2;
+                    index2 = index2.next;
+                }
+                index = index.next;
+            }
+            if(index1 != null){
+                while(index1 != null){
+                    index.next = index1;
+                    index1 = index1.next;
+                    index = index.next;
+                }
+            }
+            if(index2 != null){
+                while(index2 != null){
+                    index.next = index2;
+                    index2 = index2.next;
+                    index = index.next;
+                }
+            }
+        }
+        return dummy.next;
+    }
+
+    /**
+     * 题目：141 环形链表
+     */
+    public static boolean hasCycle(ListNode head){
+        ListNode slow = head;
+        ListNode fast = head;
+
+        while(fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+            if(slow == fast){
+                return true;
+            }
+        }
+        return false;
     }
 }
 
