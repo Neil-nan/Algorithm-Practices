@@ -2,6 +2,7 @@ package leecode02;
 
 import javax.jnlp.ClipboardService;
 import java.util.*;
+import java.util.LinkedList;
 
 public class BinaryTree {
 
@@ -579,6 +580,192 @@ public class BinaryTree {
         invertTree(root.right);
         return root;
     }
+
+    //迭代法
+    public static TreeNode invertTree2(TreeNode root){
+        if(root == null){
+            return null;
+        }
+        Queue<TreeNode> que = new ArrayDeque<>();
+        que.offer(root);
+        while(!que.isEmpty()){
+            int size = que.size();
+            while(size -- > 0){
+                TreeNode node = que.poll();
+                swap(node);
+                if(node.left != null){
+                    que.offer(node.left);
+                }
+                if(node.right != null){
+                    que.offer(node.right);
+                }
+            }
+        }
+        return root;
+    }
+
+    public static void swap(TreeNode root){
+        TreeNode temp = root.left;
+        root.left = root.right;;
+        root.right = temp;
+    }
+
+    /**
+     * 题目：101 对称二叉树
+     */
+    //递归实现
+    public static boolean isSymmetric(TreeNode root){
+        if(root == null){
+            return true;
+        }
+        return isSymmetric2(root.left, root.right);
+    }
+
+    public static boolean isSymmetric2(TreeNode left, TreeNode right){
+        //终止条件
+        if(left == null && right == null){
+            return true;
+        }else if(left != null && right == null){
+            return false;
+        }else if(left == null && right != null){
+            return false;
+        }else if(left.val != right.val){
+            return false;
+        }
+
+        //当左右相等时 向下递归
+        boolean outside = isSymmetric2(left.left, right.right);
+        boolean inside = isSymmetric2(left.right, right.left);
+
+        return outside && inside;
+    }
+
+    //使用迭代法
+    public static boolean isSymmetric3(TreeNode root){
+        if(root == null){
+            return true;
+        }
+        Queue<TreeNode> que = new LinkedList<>();
+        que.offer(root.left);
+        que.offer(root.right);
+
+        while(!que.isEmpty()){
+            int len = que.size();
+            for(int i = 0; i < len; i++){
+                TreeNode left = que.poll();
+                TreeNode right = que.poll();
+                if(left == null && right == null){
+                    continue;
+                }
+                if(left == null && right != null){
+                    return false;
+                }
+                if(left != null && right == null){
+                    return false;
+                }
+                if(left.val != right.val){
+                    return false;
+                }
+                que.offer(left.left);
+                que.offer(right.right);
+                que.offer(left.right);
+                que.offer(right.left);
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 题目：100 相同的树
+     */
+    //递归
+    public static boolean isSameTree(TreeNode p, TreeNode q){
+        //终止调价
+        if(p == null && q == null){
+            return true;
+        }
+        if(p != null && q == null){
+            return false;
+        }
+        if(p == null && q != null){
+            return false;
+        }
+        if(p.val != q.val){
+            return false;
+        }
+
+        boolean left = isSameTree(p.left, q.left);
+        boolean right = isSameTree(p.right, q.right);
+        return left && right;
+    }
+
+    //迭代
+    public static boolean isSameTree2(TreeNode p, TreeNode q){
+        if(p == null && q == null){
+            return true;
+        }
+        Queue<TreeNode> que = new LinkedList<>();
+        que.offer(p);
+        que.offer(q);
+
+        while(!que.isEmpty()){
+            TreeNode pNode = que.poll();
+            TreeNode qNode = que.poll();
+            //判断
+            if(pNode == null && qNode == null){
+                continue;
+            }
+            if(pNode != null && qNode == null){
+                return false;
+            }
+            if(pNode == null && qNode != null){
+                return false;
+            }
+            if(pNode.val != qNode.val){
+                return false;
+            }
+
+            que.offer(pNode.left);
+            que.offer(qNode.left);
+            que.offer(pNode.right);
+            que.offer(qNode.right);
+        }
+        return true;
+    }
+
+
+
+    /**
+     * 题目：104 二叉树的最大深度
+     */
+    public static int maxDepth2(TreeNode root){
+        int res = 0;
+        if(root == null){
+            return res;
+        }
+        Queue<TreeNode> que = new ArrayDeque<>();
+        que.offer(root);
+
+        while(!que.isEmpty()){
+            int len = que.size();
+            for(int i = 0; i < len; i++){
+                TreeNode temp = que.poll();
+                if(temp.left != null){
+                    que.offer(temp.left);
+                }
+                if(temp.right != null){
+                    que.offer(temp.right);
+                }
+            }
+            res++;
+        }
+        return res;
+    }
+
+    //使用递归
+//    public static int maxDepth3(TreeNode root){
+//
+//    }
 
 }
 

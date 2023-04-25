@@ -1922,6 +1922,34 @@ public class SwordOffer {
         }
     }
 
+    /**
+     * 题目：剑指offer 59 - I 滑动窗口的最大值
+     */
+    //单调队列
+    public static int[] maxSlidingWindow(int[] nums, int k){
+        ArrayDeque<Integer> que = new ArrayDeque<>();//记录的是位置
+        int n = nums.length;
+        int[] res = new int[n - k + 1];
+        int index = 0;
+
+        for(int i = 0; i < n; i++){
+            while(!que.isEmpty() && que.peek() < i - k + 1){
+                que.poll();
+            }
+            while(que.isEmpty() && nums[que.peekLast()] < nums[i]){
+                que.pollLast();
+            }
+            que.offer(i);
+
+            if(i >= k - 1){
+                res[index++] = nums[que.peek()];
+            }
+        }
+        return res;
+    }
+
+
+
 
 
 
@@ -2143,5 +2171,45 @@ class MedianFinder {
             return queMin.peek();
         }
         return (queMin.peek() + queMax.peek()) / 2.0;
+    }
+}
+
+/**
+ * 题目：剑指offer 59 - II 队列的最大值
+ */
+//使用单调队列
+class MaxQueue{
+
+    Queue<Integer> queue;
+    Deque<Integer> deque;//双端单调队列
+
+    public MaxQueue(){
+        queue = new LinkedList<>();
+        deque = new LinkedList<>();
+    }
+
+    public int max_value(){
+        if(deque.isEmpty()){
+            return -1;
+        }
+        return deque.peek();
+    }
+
+    public void push_back(int value){
+        queue.offer(value);
+        while(!deque.isEmpty() && deque.peekLast() < value){
+            deque.pollLast();
+        }
+        deque.offerLast(value);
+    }
+
+    public int pop_front(){
+        if(queue.isEmpty()){
+            return -1;
+        }
+        if(queue.peek().equals(deque.peek())){
+            deque.poll();
+        }
+        return queue.poll();
     }
 }

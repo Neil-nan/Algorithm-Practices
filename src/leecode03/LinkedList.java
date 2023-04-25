@@ -139,6 +139,89 @@ public class LinkedList {
         }
         return false;
     }
+
+    /**
+     * 题目：160 相交链表
+     */
+    public static ListNode getIntersectionNode(ListNode headA, ListNode headB){
+        //先计算长度
+        ListNode indexA = headA;
+        int lenA = 0;
+        while(indexA != null){
+            indexA = indexA.next;
+            lenA++;
+        }
+        ListNode indexB = headB;
+        int lenB = 0;
+        while(indexB != null){
+            indexB = indexB.next;
+            lenB++;
+        }
+
+        //让A的长度小于B
+        if(lenA > lenB){
+            int tempLen = lenA;
+            lenA = lenB;
+            lenB = tempLen;
+            ListNode tempNode = headA;
+            headA = headB;
+            headB = tempNode;
+        }
+        //让B先走
+        indexB = headB;
+        for(int i = 0; i < lenB - lenA; i++){
+            indexB = indexB.next;
+        }
+        indexA = headA;
+        while(indexA != null && indexB != null){
+            if(indexA == indexB){
+                return indexA;
+            }
+            indexA = indexA.next;
+            indexB = indexB.next;
+        }
+        return null;
+    }
+
+    /**
+     * 题目：92 反转链表II
+     */
+    public static ListNode reverseBetween(ListNode head, int left, int right) {
+        //虚拟头结点
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode pre = dummy;
+        ListNode end = dummy;
+        for(int i = 0; i < left - 1; i++){
+            pre = pre.next;
+        }
+        for(int i = 0; i < right; i++){
+            end = end.next;
+        }
+        ListNode start = pre.next;
+        ListNode next = end.next;
+
+        end.next = null;
+        pre.next = reverse2(start);
+        start.next = next;
+
+        return dummy.next;
+
+    }
+
+    public static ListNode reverse2(ListNode head){
+        ListNode pre = null;
+        ListNode cur = head;
+
+        while(cur != null){
+            ListNode temp = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = temp;
+        }
+        return pre;
+    }
+
 }
 
 class ListNode{
