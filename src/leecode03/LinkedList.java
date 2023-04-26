@@ -1,6 +1,7 @@
 package leecode03;
 
 import java.util.List;
+import java.util.PriorityQueue;
 
 public class LinkedList {
 
@@ -220,6 +221,98 @@ public class LinkedList {
             cur = temp;
         }
         return pre;
+    }
+
+    /**
+     * 题目：23 合并K个升序链表
+     */
+    //俩俩进行合并
+    public static ListNode mergeKLists(ListNode[] lists){
+        ListNode ans = null;
+        for (ListNode list : lists) {
+            ans = mergeTwoLists2(ans, list);
+        }
+        return ans;
+    }
+
+    public static ListNode mergeTwoLists2(ListNode a, ListNode b){
+        if(a == null){
+            return b;
+        }
+
+        //创建虚拟头节点
+        ListNode dummy = new ListNode(-1);
+        ListNode index = dummy;
+        ListNode indexA = a;
+        ListNode indexB = b;
+
+        while(indexA != null && indexB != null){
+            if(indexA.val <= indexB.val){
+                index.next = indexA;
+                indexA = indexA.next;
+            }else {
+                index.next = indexB;
+                indexB = indexB.next;
+            }
+            index = index.next;
+        }
+        if(indexA == null){
+            index.next = indexB;
+        }else {
+            index.next = indexA;
+        }
+        return dummy.next;
+
+    }
+
+    //使用优先队列合并(小顶堆)
+    public static ListNode mergeKLists2(ListNode[] lists){
+        if(lists == null || lists.length == 0){
+            return null;
+        }
+        //创建小顶堆
+        PriorityQueue<ListNode> pq = new PriorityQueue<>((list1, list2) -> list1.val - list2.val);
+        ListNode dummy = new ListNode(-1);
+        ListNode index = dummy;
+
+        //初始化堆
+        for (ListNode head : lists) {
+            if(head != null){
+                pq.add(head);
+            }
+        }
+
+        while(!pq.isEmpty()){
+            ListNode temp = pq.poll();
+            index.next = temp;
+            if(temp.next != null){
+                pq.add(temp.next);
+            }
+            index = index.next;
+        }
+        return dummy.next;
+    }
+
+    /**
+     * 题目：142 环形链表II
+     */
+    public static ListNode detectCycle(ListNode head){
+        //创建快慢指针
+        ListNode slow = head;
+        ListNode fast = head;
+        while(fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+            if(slow == fast){//有环形链表
+                ListNode index = head;
+                while(index != slow){
+                    index = index.next;
+                    slow = slow.next;
+                }
+                return slow;
+            }
+        }
+        return null;
     }
 
 }

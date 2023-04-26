@@ -1948,8 +1948,47 @@ public class SwordOffer {
         return res;
     }
 
+    /**
+     * 题目：剑指offer 60 n个骰子的点数
+     */
+    //https://leetcode.cn/problems/nge-tou-zi-de-dian-shu-lcof/solutions/637778/jian-zhi-offer-60-n-ge-tou-zi-de-dian-sh-z36d/
+    public static double[] dicesProbability(int n){
+        //因为最后的结果只与前一个动态转移数组有关，所以这里只需要设置一个一维的动态转移数组
+        //原本dp[i][j]表示的是前i个骰子的点数之和为j的概率，现在只需要最后的状态的数组，所以就只用一个一维数组dp[j]表示n个骰子下每个结果的概率。
+        //初始是1个骰子情况下的点数之和情况，就只有6个结果，所以用dp的初始化的size是6个
+        double[] dp = new double[6];
+        Arrays.fill(dp, 1.0 / 6.0);
+        //从第2个骰子开始，这里n表示n个骰子，先从第二个的情况算起，然后再逐步求3个、4个···n个的情况
+        //i表示当总共i个骰子时的结果
+        for(int i = 2; i <= n; i++){
+            double[] tmp = new double[5 * i + 1];
+            for(int j = 0; j < dp.length; j++){
+                for(int k = 0; k < 6; k++){
+                    //这里记得是加上dp数组值与1/6的乘积，1/6是第i个骰子投出某个值的概率
+                    tmp[j + k] += dp[j] / 6.0;
+                }
+            }
+            dp = tmp;
+        }
+        return dp;
+    }
 
-
+    /**
+     * 题目：剑指offer 61 扑克牌中的顺子
+     */
+    //排序
+    public static boolean isStraight(int[] nums){
+        int joker = 0;
+        Arrays.sort(nums);//数组排序
+        for(int i = 0; i < 4; i++){
+            if(nums[i] == 0){
+                joker++;//统计大小王数量
+            }else if(nums[i] == nums[i + 1]){
+                return false;
+            }
+        }
+        return nums[4] - nums[joker] < 5;
+    }
 
 
 

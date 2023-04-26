@@ -733,6 +733,93 @@ public class BinaryTree {
         return true;
     }
 
+    /**
+     * 题目：572 另一个树的子树
+     */
+    //层序遍历
+    public static boolean isSubtree(TreeNode root, TreeNode subRoot){
+        if(root == null && subRoot == null){
+            return true;
+        }
+        if(root == null || subRoot == null){
+            return false;
+        }
+        Deque<TreeNode> que = new ArrayDeque<>();
+        que.offer(root);
+        while(!que.isEmpty()){
+            int len = que.size();
+            for(int i = 0; i < len; i++){
+                TreeNode temp = que.poll();
+                if(temp.val == subRoot.val){
+                    if(isSameTree3(temp, subRoot)){
+                        return true;
+                    }
+                }
+                if(temp.left != null){
+                    que.offer(temp.left);
+                }
+                if(temp.right != null){
+                    que.offer(temp.right);
+                }
+            }
+        }
+        return false;
+    }
+
+    //使用队列
+    public static boolean isSameTree3(TreeNode a, TreeNode b){
+        if(a == null && b == null){
+            return true;
+        }
+        Queue<TreeNode> que = new LinkedList<>();
+        que.offer(a);
+        que.offer(b);
+
+        while(!que.isEmpty()){
+            TreeNode temp1 = que.poll();
+            TreeNode temp2 = que.poll();
+            //判断
+            if(temp1 == null && temp2 == null){
+                continue;
+            }
+            if(temp1 == null || temp2 == null){
+                return false;
+            }
+            if(temp1.val != temp2.val){
+                return false;
+            }
+
+            que.offer(temp1.left);
+            que.offer(temp2.left);
+            que.offer(temp1.right);
+            que.offer(temp2.right);
+        }
+        return true;
+    }
+
+    //方法二
+    public static boolean isSubtree2(TreeNode root, TreeNode subRoot){
+        //终止条件
+        if(subRoot == null){
+            return true;
+        }
+        if(root == null){
+            return false;
+        }
+
+        return check(root, subRoot) || isSubtree2(root.left, subRoot) || isSubtree2(root.right, subRoot);
+
+    }
+
+    public static boolean check(TreeNode p, TreeNode q){
+        if(p == null && q == null){
+            return true;
+        }
+        if(p == null || q == null || p.val != q.val){
+            return false;
+        }
+        return check(p.left, q.left) && check(p.right, q.right);
+    }
 
 
     /**
@@ -763,9 +850,57 @@ public class BinaryTree {
     }
 
     //使用递归
-//    public static int maxDepth3(TreeNode root){
-//
-//    }
+    public static int maxDepth3(TreeNode root){
+        //终止条件
+        if(root == null){
+            return 0;
+        }
+        int left = maxDepth(root.left);
+        int right = maxDepth(root.right);
+
+        return Math.max(left, right) + 1;
+    }
+
+    /**
+     * 题目：559：n叉树的最大深度
+     */
+    public static int maxDepth3(Node root){
+        int res = 0;
+        if(root == null){
+            return res;
+        }
+        Deque<Node> que = new ArrayDeque<>();
+        que.offer(root);
+
+        while(!que.isEmpty()){
+            int len = que.size();
+            for(int i = 0; i < len; i++){
+                Node temp = que.poll();
+                for(Node child: temp.children){
+                    if(child != null){
+                        que.offer(child);
+                    }
+                }
+            }
+            res++;
+        }
+        return res;
+    }
+
+    //使用递归
+    public static int maxDepth4(Node root){
+        //终止条件
+        if(root == null){
+            return 0;
+        }
+        int depth = 0;
+        if(root.children != null){
+            for (Node child : root.children) {
+                depth = Math.max(maxDepth4(child), depth);
+            }
+        }
+        return depth + 1;
+    }
 
 }
 
