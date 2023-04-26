@@ -1987,7 +1987,7 @@ public class SwordOffer {
                 return false;
             }
         }
-        return nums[4] - nums[joker] < 5;
+        return nums[4] - nums[joker] < 6;
     }
 
 
