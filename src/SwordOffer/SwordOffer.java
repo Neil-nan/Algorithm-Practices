@@ -1977,18 +1977,18 @@ public class SwordOffer {
      * 题目：剑指offer 61 扑克牌中的顺子
      */
     //排序
-    public static boolean isStraight(int[] nums){
-        int joker = 0;
-        Arrays.sort(nums);//数组排序
-        for(int i = 0; i < 4; i++){
-            if(nums[i] == 0){
-                joker++;//统计大小王数量
-            }else if(nums[i] == nums[i + 1]){
-                return false;
-            }
-        }
-        return nums[4] - nums[joker] < 5;
-    }
+//    public static boolean isStraight(int[] nums){
+//        int joker = 0;
+//        Arrays.sort(nums);//数组排序
+//        for(int i = 0; i < 4; i++){
+//            if(nums[i] == 0){
+//                joker++;//统计大小王数量
+//            }else if(nums[i] == nums[i + 1]){
+//                return false;
+//            }
+//        }
+//        return nums[4] - nums[joker] < 5;
+//    }
 
 
 
