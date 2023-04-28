@@ -902,6 +902,128 @@ public class BinaryTree {
         return depth + 1;
     }
 
+    /**
+     * 题目：111 二叉树的最小深度
+     */
+    //迭代法
+    public static int minDepth3(TreeNode root){
+        int res = 0;
+        if(root == null){
+            return res;
+        }
+        Deque<TreeNode> que = new ArrayDeque<>();
+        que.offer(root);
+
+        while(!que.isEmpty()){
+            int len = que.size();
+            res++;
+            for(int i = 0; i < len; i++){
+                TreeNode temp = que.poll();
+                if(temp.left == null && temp.right == null){
+                    return res;
+                }
+                if(temp.left != null){
+                    que.offer(temp.left);
+                }
+                if(temp.right != null){
+                    que.offer(temp.right);
+                }
+            }
+        }
+        return res;
+    }
+
+    //递归法
+    public static int minDepth4(TreeNode root){
+        //终止条件
+        if(root == null){
+            return 0;
+        }
+        int left = minDepth4(root.left);
+        int right = minDepth4(root.right);
+
+        if(left == 0 && right != 0){
+            return right + 1;
+        }
+        if(left != 0 && right == 0){
+            return left + 1;
+        }
+        return Math.min(left, right) + 1;
+    }
+
+    /**
+     * 题目：222 完全二叉树的节点个数
+     */
+    //计算普通二叉树
+    public static int countNodes(TreeNode root){
+        if(root == null){
+            return 0;
+        }
+        int res = 0;
+        Deque<TreeNode> que = new ArrayDeque<>();
+        que.offer(root);
+
+        while(!que.isEmpty()){
+            int len = que.size();
+            for(int i = 0; i < len; i++){
+                TreeNode temp = que.poll();
+                res++;
+                if(temp.left != null){
+                    que.offer(temp.left);
+                }
+                if(temp.right != null){
+                    que.offer(temp.right);
+                }
+            }
+        }
+        return res;
+    }
+
+    //通用递归法
+    public static int countNodes2(TreeNode root){
+        //终止条件
+        if(root == null){
+            return 0;
+        }
+
+        int left = countNodes2(root.left);
+        int right = countNodes2(root.right);
+
+        return left + right + 1;
+    }
+
+    //针对完全二叉树的解法
+    //满二叉树的节点数为 2 ^ depth - 1
+    public static int countNode3(TreeNode root){
+        if(root == null){
+            return 0;
+        }
+        //开始根据左右深度是否相同来判断该子树是不是满二叉树
+        TreeNode leftNode = root.left;
+        TreeNode rightNode = root.right;
+
+        int leftDepth = 1;
+        int rightDepth = 1;
+
+        //求左子树的深度
+        while(leftNode != null){
+            leftNode = leftNode.left;
+            leftDepth++;
+        }
+
+        //求右子树深度
+        while(rightNode != null){
+            rightNode = rightNode.right;
+            rightDepth++;
+        }
+
+        if(leftDepth == rightDepth){//满足二叉树
+            return (int)(Math.pow(2, leftDepth) - 1);
+        }
+
+        return countNode3(root.left) + countNode3(root.right) + 1;
+    }
+
 }
 
 //创建节点

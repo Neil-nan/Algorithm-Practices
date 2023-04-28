@@ -315,6 +315,103 @@ public class LinkedList {
         return null;
     }
 
+    /**
+     * 题目：143 重排链表
+     */
+    //分三部
+    //一 找到原链表的重点
+    //将原链表的右半端反转
+    //将原链表的两端合并
+    public static void recorderList(ListNode head){
+        if(head == null){
+            return;
+        }
+        ListNode mid = middleNode(head);
+        ListNode l1 = head;
+        ListNode l2 = mid.next;
+        //把链表断了 断成左右两份
+        mid.next = null;
+        l2 = reverseList3(l2);
+        mergeList(l1, l2);
+    }
+
+    public static ListNode middleNode(ListNode head){
+        ListNode slow = head;
+        ListNode fast = head;
+        //快指针走过的路是慢指针的两倍，所以正好应该是在重点
+        while(fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+
+    public static ListNode reverseList3(ListNode head){
+        ListNode prev = null;
+        ListNode curr = head;
+        while(curr != null){
+            ListNode nextTemp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = nextTemp;
+        }
+        return prev;
+    }
+
+    public static void mergeList(ListNode l1, ListNode l2){
+        ListNode l1_tmp;
+        ListNode l2_tmp;
+        while(l1 != null && l2 != null){
+            l1_tmp = l1.next;
+            l2_tmp = l2.next;
+
+            l1.next = l2;
+            l1 = l1_tmp;
+
+            l2.next = l1;
+            l2 = l2_tmp;
+        }
+    }
+
+    /**
+     * 题目：876 链表的中间结点
+     */
+    public static ListNode middleNode2(ListNode head){
+        ListNode slow = head;
+        ListNode fast = head;
+        while(fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+
+    /**
+     * 题目：19 删除链表的倒数第N个结点
+     */
+    public static ListNode removeNthFromEnd(ListNode head, int n){
+        //创建头结点
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        //快慢指针
+        ListNode slow = dummy;
+        ListNode fast = dummy;
+        //快指针先走
+        for(int i = 0; i <= n; i++){
+            fast = fast.next;
+        }
+
+        //快慢指针一起走
+        while(fast != null){
+            fast = fast.next;
+            slow = slow.next;
+        }
+        //删除
+        slow.next = slow.next.next;
+        return dummy.next;
+    }
+
+
 }
 
 class ListNode{
