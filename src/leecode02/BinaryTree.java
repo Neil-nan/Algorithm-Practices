@@ -1024,6 +1024,177 @@ public class BinaryTree {
         return countNode3(root.left) + countNode3(root.right) + 1;
     }
 
+    /**
+     * 题目：110 平衡二叉树
+     */
+    //递归后序
+    public static boolean isBalanced(TreeNode root){
+        return getHeight(root) != -1;
+    }
+
+    public static int getHeight(TreeNode node){
+        //终止条件
+        if(node == null){
+            return 0;
+        }
+
+        //后序遍历
+        int left = getHeight(node.left);
+        int right = getHeight(node.right);
+
+        //如果左右子树不满足平衡二叉树 返回-1
+        if(left == -1 || right == -1){
+            return -1;
+        }
+
+        if(Math.abs(left - right) > 1){
+            return -1;
+        }else {
+            return Math.max(left, right) + 1;
+        }
+    }
+
+    /**
+     * 题目：257 二叉树的所有路径
+     */
+    static List<String> res = new ArrayList<>();
+    public static List<String> binaryTreePaths(TreeNode root){
+        List<Integer> list = new ArrayList<>();
+        backtracking(root, list);
+        return res;
+    }
+
+    public static void backtracking(TreeNode node, List<Integer> list){
+        list.add(node.val);
+        //终止条件
+        if(node.left == null && node.right == null){
+            StringBuffer sb = new StringBuffer();
+            listToString(list, sb);
+            res.add(sb.toString());
+        }
+
+        if(node.left != null){
+            backtracking(node.left, list);
+            list.remove(list.size() - 1);
+        }
+        if(node.right != null){
+            backtracking(node.right, list);
+            list.remove(list.size() - 1);
+        }
+    }
+
+    public static void listToString(List<Integer> list, StringBuffer sb){
+        int len = list.size();
+        for(int i = 0; i < len - 1; i++){
+            sb.append(list.get(i));
+            sb.append("->");
+        }
+        sb.append(list.get(len - 1));
+    }
+
+    /**
+     * 题目：404 左叶子之和
+     */
+    //前序遍历
+    public static int sumOfLeftLeaves(TreeNode root){
+        if(root == null){
+            return 0;
+        }
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        stack.push(root);
+        int res = 0;
+        while(!stack.isEmpty()){
+            TreeNode node = stack.pop();
+            if(node.left != null && node.left.left == null && node.left.right == null){
+                res += node.left.val;
+            }
+            if(node.right != null){
+                stack.push(node.right);
+            }
+            if(node.left != null){
+                stack.push(node.left);
+            }
+        }
+        return res;
+    }
+
+    //递归
+    public static int sumOfLeftLeaves2(TreeNode root){
+        //终止条件
+        if(root == null){
+            return 0;
+        }
+        int left = sumOfLeftLeaves2(root.left);
+        int right = sumOfLeftLeaves2(root.right);
+        int mid = 0;
+
+        if(root.left != null && root.left.left == null && root.left.right == null){
+            mid = root.left.val;
+        }
+
+        return mid + left + right;
+    }
+
+    /**
+     * 题目：513 找树左下角的值
+     */
+    public static int findBottomLeftValue(TreeNode root){
+        if(root == null){
+            return 0;
+        }
+        Deque<TreeNode> que = new ArrayDeque<>();
+        que.offer(root);
+        int res = 0;
+        while(!que.isEmpty()){
+            int len = que.size();
+            for(int i = 0; i < len; i++){
+                TreeNode node = que.poll();
+                if(i == 0){
+                    res = node.val;
+                }
+                if(node.left != null){
+                    que.offer(node.left);
+                }
+                if(node.right != null){
+                    que.offer(node.right);
+                }
+            }
+        }
+        return res;
+    }
+
+    //递归
+    static int maxDepth = -1;
+    static int bottomResult = 0;
+    public static int findBottomLeftValue2(TreeNode root){
+        if(root == null){
+            return 0;
+        }
+        traversal2(root, 0);
+        return bottomResult;
+    }
+
+    public static void traversal2(TreeNode root, int depth){
+        if(root.left == null && root.right == null){
+            if(depth > maxDepth){
+                maxDepth = depth;//更新最大深度
+                bottomResult = root.val;
+            }
+            return;
+        }
+        if(root.left != null){
+            depth++;
+            traversal2(root.left, depth);
+            depth--;//回溯
+        }
+        if(root.right != null){
+            depth++;
+            traversal2(root.right, depth);
+            depth--;
+        }
+        return;
+    }
+
 }
 
 //创建节点

@@ -988,6 +988,63 @@ public class Array {
         return left;
     }
 
+    /**
+     * 题目：912 排序数组
+     */
+    //快排
+    public static int[] sortArray(int[] nums){
+        quickSort(nums, 0, nums.length - 1);
+        return nums;
+    }
+
+    public static void quickSort(int[] nums, int left, int right){
+        if(left >= right){
+            return;
+        }
+        int pivotIndex = partition(nums, left, right);
+        quickSort(nums, left, pivotIndex - 1);
+        quickSort(nums, pivotIndex + 1, right);
+    }
+
+    private final static Random random = new Random();
+    public static int partition(int[] nums, int left, int right){
+        int randomIndex = left + random.nextInt(right - left + 1);//随机选一个数
+        // 将数放在最左边
+        swap(nums, left, randomIndex);
+
+        // all in nums[left + 1..le) <= pivot;
+        // all in nums(ge..right] >= pivot;
+        int pivot = nums[left];
+        int le = left + 1;//小于目标值的右边界
+        int ge = right;//大于目标值的左边界
+
+        while (true) {
+            while (le <= ge && nums[le] < pivot) {
+                le++;
+            }
+
+            while (le <= ge && nums[ge] > pivot) {
+                ge--;
+            }
+
+            if (le >= ge) {//直到两个边界相遇 break
+                break;
+            }
+            swap (nums, le, ge);
+            le++;
+            ge--;
+        }
+
+        swap(nums, left, ge);//左边界是开区间
+        return ge;
+    }
+
+    public static void swap2(int[] nums, int index1, int index2){
+        int temp = nums[index1];
+        nums[index1] = nums[index2];
+        nums[index2] = temp;
+    }
+
 
 }
 

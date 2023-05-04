@@ -460,15 +460,15 @@ public class SwordOffer {
         //初始化
         //状态转移表 键值对 (key,value)(key, value)(key,value) 含义：若输入 key ，则可从状态 i转移至状态 value 。
         Map[] states = {
-                new HashMap<>() {{ put(' ', 0); put('s', 1); put('d', 2); put('.', 4); }}, // 0.
-                new HashMap<>() {{ put('d', 2); put('.', 4); }},                           // 1.
-                new HashMap<>() {{ put('d', 2); put('.', 3); put('e', 5); put(' ', 8); }}, // 2.
-                new HashMap<>() {{ put('d', 3); put('e', 5); put(' ', 8); }},              // 3.
-                new HashMap<>() {{ put('d', 3); }},                                        // 4.
-                new HashMap<>() {{ put('s', 6); put('d', 7); }},                           // 5.
-                new HashMap<>() {{ put('d', 7); }},                                        // 6.
-                new HashMap<>() {{ put('d', 7); put(' ', 8); }},                           // 7.
-                new HashMap<>() {{ put(' ', 8); }}                                         // 8.
+                new HashMap<Character, Integer>() {{ put(' ', 0); put('s', 1); put('d', 2); put('.', 4); }}, // 0.
+                new HashMap<Character, Integer>() {{ put('d', 2); put('.', 4); }},                           // 1.
+                new HashMap<Character, Integer>() {{ put('d', 2); put('.', 3); put('e', 5); put(' ', 8); }}, // 2.
+                new HashMap<Character, Integer>() {{ put('d', 3); put('e', 5); put(' ', 8); }},              // 3.
+                new HashMap<Character, Integer>() {{ put('d', 3); }},                                        // 4.
+                new HashMap<Character, Integer>() {{ put('s', 6); put('d', 7); }},                           // 5.
+                new HashMap<Character, Integer>() {{ put('d', 7); }},                                        // 6.
+                new HashMap<Character, Integer>() {{ put('d', 7); put(' ', 8); }},                           // 7.
+                new HashMap<Character, Integer>() {{ put(' ', 8); }}                                         // 8.
         };
         int p = 0;
         char t;
@@ -1990,6 +1990,137 @@ public class SwordOffer {
         return nums[4] - nums[joker] < 5;
     }
 
+    /**
+     * 题目：剑指offer 62 圆圈中最后剩下的数字
+     */
+    //离谱 这个是真的想不出来
+    public static int lastRemaining(int n, int m){
+        //创建dp数组 初始化
+        int[] dp = new int[n + 1];
+        dp[1] = 0;
+
+        for(int i = 2; i <= n; i++){
+            dp[i] = (dp[i - 1] + m) % i;
+        }
+        return dp[n];
+    }
+
+    /**
+     * 题目：剑指offer 63 股票的最大利润
+     */
+    //动态规划
+    public static int maxProfit(int[] prices){
+        if(prices == null || prices.length == 0){
+            return 0;
+        }
+        int len = prices.length;
+        //0 买入 1 卖出
+        int[][] dp = new int[len][2];
+        dp[0][0] = -prices[0];
+        dp[0][1] = 0;
+        for(int i = 1; i < len; i++){
+            dp[i][0] = Math.max(dp[i - 1][0], -prices[i]);//只能买一次
+            dp[i][1] = Math.max(dp[i - 1][1], dp[i - 1][0] + prices[i]);
+        }
+        return dp[len - 1][1];
+    }
+
+    //贪心算法
+    //左边最小值 和 右边的最大值
+    public static int maxProfit2(int[] prices){
+        int result = 0;
+        int low = Integer.MAX_VALUE;// 取最左边的最小价格
+
+        for(int i = 0; i < prices.length; i++){
+            low = Math.min(low, prices[i]);
+            result = Math.max(result, prices[i] - low);
+        }
+        return result;
+    }
+
+    /**
+     * 题目：剑指offer 64 求1+2+…+n
+     */
+    static int resInteger = 0;
+    public static int sumNums(int n){
+        boolean x = n > 1 && sumNums(n - 1) > 0;
+        resInteger += n;
+        return resInteger;
+    }
+
+    /**
+     * 题目：剑指offer 65 不用加减乘除做加法
+     */
+    //不会
+    public static int add(int a, int b){
+        while(b != 0) { // 当进位为 0 时跳出
+            int c = (a & b) << 1;  // c = 进位
+            a ^= b; // a = 非进位和
+            b = c; // b = 进位
+        }
+        return a;
+    }
+
+    /**
+     * 题目：剑指offer 66 构建乘积数组
+     */
+    //使用乘法代替除法
+    public static int[] constructArr(int[] a){
+        int len = a.length;
+        if(len == 0){
+            return new int[0];
+        }
+        int[] b = new int[len];
+        b[0] = 1;
+        //下三角
+        for(int i = 1; i < len; i++){
+            b[i] = b[i - 1] * a[i - 1];
+        }
+
+        //上三角
+        int temp = 1;
+        for(int i = len - 2; i >= 0; i--){
+            temp *= a[i + 1];
+            b[i] *= temp;
+        }
+        return b;
+    }
+
+    /**
+     * 题目：剑指offer 67 把字符串转换成整数
+     */
+    public static int strToInt(String str){
+        int res = 0;
+        int index = 0;
+        int len = str.length();
+        int sign = 1;
+        int boundary = Integer.MAX_VALUE / 10;
+        if(len == 0){
+            return res;
+        }
+        while(str.charAt(index) == ' '){
+            index++;
+            if(index == len){
+                return res;
+            }
+        }
+        if(str.charAt(index) == '-'){
+            sign = -1;
+        }
+        if(str.charAt(index) == '-' || str.charAt(index) == '+'){
+            index++;
+        }
+        for(int i = index; i < len; i++){//到了这里就只能是数字了
+            if(str.charAt(i) < '0' || str.charAt(i) > '9'){
+                break;
+            }
+            if(res > boundary || res == boundary && str.charAt(i) > '7'){
+                return sign == 1 ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+            }
+            res = res * 10 + (str.charAt(i) - '0');
+        }
+        return sign * res;
+    }
 
 
 
