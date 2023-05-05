@@ -2122,7 +2122,71 @@ public class SwordOffer {
         return sign * res;
     }
 
+    /**
+     * 题目：剑指offer 68 - I 二叉搜索树的最近公共祖先
+     */
+    //后序遍历 递归
+    //普通二叉树
+    public static TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q){
+        //终止条件
+        if(root == null || root == p || root == q){
+            return root;
+        }
 
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+
+        if(left == null && right == null){//两个节点都没有找到
+            return null;
+        }else if(left == null && right != null){
+            return right;
+        }else if(left != null && right == null){
+            return left;
+        }else {//两个点都找到
+            return root;
+        }
+    }
+
+    //搜索树
+    public static TreeNode lowestCommonAncestor2(TreeNode root, TreeNode p, TreeNode q){
+        if(root == null){
+            return root;
+        }
+
+        while(root != null){
+            if(root.val > p.val && root.val > q.val){
+                root = root.left;
+            }else if(root.val < p.val && root.val < q.val){
+                root = root.right;
+            }else {
+                return root;
+            }
+        }
+        return root;
+    }
+
+    /**
+     * 题目：二叉树的最近公共祖先
+     */
+    public static TreeNode lowestCommonAncestor3(TreeNode root, TreeNode p, TreeNode q){
+        //终止条件
+        if(root == null || root == p || root == q){
+            return root;
+        }
+
+        TreeNode left = lowestCommonAncestor3(root.left, p, q);
+        TreeNode right = lowestCommonAncestor3(root.right, p, q);
+
+        if(left == null && right == null){
+            return null;
+        }else if(left == null && right != null){
+            return right;
+        }else if(left != null && right == null){
+            return left;
+        }else {
+            return root;
+        }
+    }
 
 
 

@@ -1195,6 +1195,114 @@ public class BinaryTree {
         return;
     }
 
+    /**
+     * 题目：112 路径总和
+     */
+    //回溯
+    public static boolean hasPathSum(TreeNode root, int targetSum){
+        //终止条件
+        if(root == null){
+            return false;
+        }
+        return traversal3(root, targetSum - root.val);
+    }
+
+    public static boolean traversal3(TreeNode node, int targetSum){
+        //终止条件
+        if(node.left == null && node.right == null){
+            if(targetSum == 0){
+                return true;
+            }else {
+                return false;
+            }
+        }
+
+        if(node.left != null){
+            if(traversal3(node.left, targetSum - node.left.val)){
+                return true;
+            }
+        }
+        if(node.right != null){
+            if(traversal3(node.right, targetSum - node.right.val)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasPathSum2(TreeNode root, int targetSum) {
+        if(root == null){
+            return false;
+        }
+        //节点指针
+        Stack<TreeNode> stack1 = new Stack<>();
+        //路径数值
+        Stack<Integer> stack2 = new Stack<>();
+
+        stack1.push(root);
+        stack2.push(root.val);
+        while (!stack1.isEmpty()){
+            int size = stack1.size();
+
+            for(int i = 0; i < size; i++){
+                TreeNode tmp = stack1.pop();
+                int sum = stack2.pop();
+
+                //如果该节点是叶子节点，同时该节点的路径数值等于sum，那么就返回true
+                if(tmp.left == null && tmp.right == null && sum == targetSum){
+                    return true;
+                }
+                //左节点，压进去一个节点的时候，将该节点的路径数值也记录下来
+                if(tmp.left != null){
+                    stack1.push(tmp.left);
+                    stack2.push(sum + tmp.left.val);
+                }
+                //右节点，咽进去一个节点的时候，将该节点的路径数值也记录下来
+                if(tmp.right != null){
+                    stack1.push(tmp.right);
+                    stack2.push(sum + tmp.right.val);
+                }
+
+            }
+
+        }
+        return false;
+    }
+
+    /**
+     * 题目：113 路径总和 II
+     */
+    static List<List<Integer>> resList;
+    public static List<List<Integer>> pathSum(TreeNode root, int targetSum){
+        resList = new ArrayList<>();
+        if(root == null){
+            return resList;
+        }
+        List<Integer> list = new ArrayList<>();
+        traversal4(root, targetSum - root.val, list);
+        return resList;
+    }
+
+    public static void traversal4(TreeNode node, int targetSum, List<Integer> list){
+        list.add(node.val);
+        //终止条件
+        if(node.left == null && node.right == null){
+            if(targetSum == 0){
+                resList.add(new ArrayList<>(list));
+            }
+            return;
+        }
+
+        if(node.left != null){
+            traversal4(node.left, targetSum - node.left.val, list);
+            list.remove(list.size() - 1);
+        }
+        if(node.right != null){
+            traversal4(node.right, targetSum - node.right.val, list);
+            list.remove(list.size() - 1);
+        }
+    }
+
 }
 
 //创建节点
