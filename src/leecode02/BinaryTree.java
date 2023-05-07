@@ -1303,6 +1303,79 @@ public class BinaryTree {
         }
     }
 
+    /**
+     * 题目：106 从中序与后序遍历序列构造二叉树
+     */
+    //前序
+    public static TreeNode buildTree(int[] inorder, int[] postorder){
+        if(inorder.length == 0 || postorder.length == 0){
+            return null;
+        }
+        return findNode(inorder, 0, inorder.length - 1, postorder, 0, postorder.length - 1);
+    }
+
+    //前闭后闭区间
+    public static TreeNode findNode(int[] inorder, int inBegin, int inEnd, int[] postorder, int postBegin, int postEnd){
+        //终止条件
+        if(inBegin > inEnd || postBegin > postEnd){
+            return null;
+        }
+        //找到中间结点
+        int rootValue = postorder[postEnd];
+        TreeNode root = new TreeNode(rootValue);
+        //判断是不是叶子结点(可以不写)
+        if(postEnd - postBegin == 0){
+            return root;
+        }
+        //找中间结点的位置
+        int index;
+        for(index = inBegin; index <= inEnd; index++){
+            if(inorder[index] == rootValue){
+                break;
+            }
+        }
+        int lenOfLeft = index - inBegin;
+        root.left = findNode(inorder, inBegin, index - 1, postorder, postBegin, postBegin + lenOfLeft - 1);
+        root.right = findNode(inorder, index + 1, inEnd, postorder, postBegin + lenOfLeft, postEnd - 1);
+        return root;
+    }
+
+    /**
+     * 题目：105 从前序与中序遍历序列构造二叉树
+     */
+    public static TreeNode buildTree2(int[] preorder, int[] inorder){
+        if(preorder.length == 0 || inorder.length == 0){
+            return null;
+        }
+        return findNode2(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1);
+    }
+
+    //前闭后闭空间
+    public static TreeNode findNode2(int[] preorder, int preBegin, int preEnd, int[] inorder, int inBegin, int inEnd){
+        //终止条件
+        if(preBegin > preEnd || inBegin > inEnd){
+            return null;
+        }
+        //找到中间结点
+        int rootValue = preorder[preBegin];
+        TreeNode root = new TreeNode(rootValue);
+        //判断是不是叶子结点
+        if(preEnd - preBegin == 0){
+            return root;
+        }
+        //找到中间结点在中序排列中的位置
+        int index;
+        for(index = inBegin; index <= inEnd; index++){
+            if(inorder[index] == rootValue){
+                break;
+            }
+        }
+        int lenOfLeft = index - inBegin;
+        root.left = findNode2(preorder, preBegin + 1, preBegin + lenOfLeft, inorder, inBegin, index - 1);
+        root.right = findNode2(preorder, preBegin + 1 + lenOfLeft, preEnd, inorder, index + 1, inEnd);
+        return root;
+    }
+
 }
 
 //创建节点

@@ -1,5 +1,7 @@
 package leecode03;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.PriorityQueue;
 import java.util.Random;
 
@@ -108,5 +110,41 @@ public class StackAndQueue {
         nums[index1] = nums[index2];
         nums[index2] = temp;
     }
+
+    /**
+     * 题目：20 有效的括号
+     */
+    public static boolean isValid(String s){
+        int len = s.length();
+        if(len % 2 == 1){
+            return false;
+        }
+        Deque<Character> stack = new ArrayDeque<>();
+        for (char c : s.toCharArray()) {
+            if(c == '('){
+                stack.push(')');
+            }
+            if(c == '['){
+                stack.push(']');
+            }
+            if(c == '{'){
+                stack.push('}');
+            }
+            if(c == ')' || c == ']' || c == '}'){
+                if(!stack.isEmpty()){
+                    char c1 = stack.peek();
+                    if(c1 == c){
+                        stack.pop();
+                    }else {
+                        return false;
+                    }
+                }else {
+                    return false;
+                }
+            }
+        }
+        return stack.isEmpty();
+    }
+
 
 }

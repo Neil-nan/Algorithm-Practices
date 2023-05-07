@@ -1045,6 +1045,65 @@ public class Array {
         nums[index2] = temp;
     }
 
+    /**
+     * 题目：200 岛屿数量
+     */
+    //深度优先遍历DFS
+    public static int numIslands(char[][] grid){
+        int count = 0;
+        for(int i = 0; i < grid.length; i++){
+            for(int j = 0; j < grid[0].length; j++){
+                if(grid[i][j] == '1'){
+                    dfs(grid, i, j);
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    public static void dfs(char[][] grid, int i, int j){
+        if(i < 0 || j < 0 || i >= grid.length || j >= grid[0].length || grid[i][j] == '0'){
+            return;
+        }
+        grid[i][j] = '0';
+        dfs(grid, i + 1, j);
+        dfs(grid, i, j + 1);
+        dfs(grid, i - 1, j);
+        dfs(grid, i, j - 1);
+    }
+
+    //广度优先遍历
+    public static int numIslands2(char[][] grid){
+        int count = 0;
+        for(int i = 0; i < grid.length; i++){
+            for(int j = 0; j < grid[0].length; j++){
+                if(grid[i][j] == '1'){
+                    bfs(grid, i, j);
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    public static void bfs(char[][] grid, int i, int j){
+        Deque<int[]> que = new ArrayDeque<>();
+        que.offer(new int[]{i, j});
+        while(!que.isEmpty()){
+            int[] cur = que.remove();
+            i = cur[0];
+            j = cur[1];
+            if(0 <= i && i < grid.length && 0 <= j && j < grid[0].length && grid[i][j] == '1') {
+                grid[i][j] = '0';
+                que.add(new int[] { i + 1, j });
+                que.add(new int[] { i - 1, j });
+                que.add(new int[] { i, j + 1 });
+                que.add(new int[] { i, j - 1 });
+            }
+        }
+    }
+
 
 }
 
