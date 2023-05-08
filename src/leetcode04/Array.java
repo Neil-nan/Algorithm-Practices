@@ -123,4 +123,99 @@ public class Array {
         }
         return right;
     }
+
+    /**
+     * 题目：367 有效的完全平方数
+     */
+    public static boolean isPerfectSquare(int num) {
+        int left = 0;
+        int right = num / 2 + 1;
+        while(left <= right){
+            int mid = left + (right - left) / 2;
+            if((long)mid * mid < num){
+                left = mid + 1;
+            }else if((long)mid * mid > num){
+                right = mid - 1;
+            }else{
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 题目：27 移除元素
+     */
+    //快慢双指针
+    public static int removeElement(int[] nums, int val) {
+        if(nums == null || nums.length == 0){
+            return 0;
+        }
+        //使用快慢指针
+        int slow = 0;
+        for(int fast = 0; fast < nums.length; fast++){
+            if(nums[fast] != val){
+                nums[slow] = nums[fast];
+                slow++;
+            }
+        }
+        return slow;
+    }
+
+    //左右双指针
+    public static int removeElement2(int[] nums, int val) {
+        //使用左右指针
+        if(nums == null || nums.length == 0){
+            return 0;
+        }
+        int left = 0;
+        int right = nums.length - 1;
+        while(left <= right){
+            if(nums[left] == val){
+                nums[left] = nums[right];
+                right--;
+            }else{
+                left++;
+            }
+        }
+        return left;
+    }
+
+    /**
+     * 题目：26 删除排序数组中的重置项
+     */
+    public static int removeDuplicates(int[] nums) {
+        //快慢指针
+        if(nums == null || nums.length == 0){
+            return 0;
+        }
+        int slow = 0;
+        for(int fast = 0; fast < nums.length; fast++){
+            if(nums[slow] != nums[fast]){
+                slow++;
+                nums[slow] = nums[fast];
+            }
+        }
+        return slow + 1;
+    }
+
+    /**
+     * 题目：283 移动零
+     */
+    public static void moveZeroes(int[] nums) {
+        if(nums == null || nums.length == 0){
+            return;
+        }
+        //创建快慢指针
+        int slow = 0;
+        for(int fast = 0; fast < nums.length; fast++){
+            if(nums[fast] != 0){
+                int temp = nums[slow];
+                nums[slow] = nums[fast];
+                nums[fast] = temp;
+                slow++;
+            }
+        }
+        return;
+    }
 }
