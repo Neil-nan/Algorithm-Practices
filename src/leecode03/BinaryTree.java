@@ -92,6 +92,31 @@ public class BinaryTree {
 
     }
 
+    /**
+     * 题目：124 二叉树的最大路径和
+     */
+    static int val;
+    public static int maxPathSum(TreeNode root){
+        val = Integer.MIN_VALUE;
+        dfs(root, val);
+        return val;
+    }
+
+    public static int dfs(TreeNode root, int ans){
+        if(root == null){
+            return 0;
+        }
+        //计算左边分支最大值 左边分支如果为负数还不如不选择
+        int left =  dfs(root.left, val);
+        //计算右边分支最大值
+        int right = dfs(root.right, val);
+        //left->root->right 作为路径与已经计算过历史最大值做比较
+        int lmr = root.val + Math.max(0, left) + Math.max(0, right);
+        int ret = root.val + Math.max(0, Math.max(left, right));
+        val = Math.max(val, Math.max(lmr, ret));
+        return ret;
+    }
+
 
 }
 

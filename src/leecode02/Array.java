@@ -333,6 +333,7 @@ public class Array {
                 left++;
             }
             ans = Math.max(ans, right - left + 1);
+            right++;
         }
         return ans;
     }
